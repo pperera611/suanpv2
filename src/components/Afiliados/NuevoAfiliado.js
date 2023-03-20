@@ -2,7 +2,6 @@ import Modal from "../../helpers/Modal";
 import FormAfiliado from "./FormAfiliado";
 import Divider from '@mui/material/Divider';
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
 
 export default function NuevoAfiliado(props) {
   const [isModalOpen, setIsModalOpen] = useState(props.modalOpen);
@@ -16,10 +15,10 @@ export default function NuevoAfiliado(props) {
   };
 
   return (
-    <Modal isOpen={isModalOpen} onClose={closeModal} tituloModal="Nuevo Afiliado">
+    <Modal isOpen={isModalOpen} tituloModal="Nuevo Afiliado">
         <Divider/>
-        <FormAfiliado/>
-      <Link to="/afiliados"><button onClick={closeModal}>Cerrar Modal</button></Link>
+        <FormAfiliado onClose={closeModal}/>
+      
     </Modal>
   );
   

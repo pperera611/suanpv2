@@ -8,17 +8,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import {useEffect, useState} from "react";
 import SelectLocalidad from "../../helpers/SelectLocalidad";
-import { styled } from "@mui/material/styles";
-import Paper from "@mui/material/Paper";
-
-
-const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-    ...theme.typography.body2,
-    padding: theme.spacing(0),
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-  }));
+import Item from "../../helpers/Item";
 
 
 const FiltroAfiliados = (props) => {
