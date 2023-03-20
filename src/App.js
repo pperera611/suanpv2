@@ -1,23 +1,33 @@
-import logo from './logo.svg';
 import './App.css';
+import React from "react";
+import Dashboard from "./components/Dashboard";
+import SignInSide from './components/SignInSide';
+import Logout from './components/Logout';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import AuthLayout from "./auth/AuthLayout.js";
+
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      
+        <BrowserRouter>
+          <Routes>
+            <Route
+              path="*"
+              element={
+                <AuthLayout>
+                  {" "}
+                  <Dashboard />{" "}
+                </AuthLayout>
+              }
+            />
+            <Route path="/login" element={<SignInSide />} />
+            <Route path="/logout" element={<Logout />} />
+            <Route path="*" element={<SignInSide />} />
+          </Routes>
+        </BrowserRouter>
+      
     </div>
   );
 }
