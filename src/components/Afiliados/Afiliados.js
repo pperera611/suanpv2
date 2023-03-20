@@ -56,8 +56,8 @@ export default function Afiliados() {
   }
   
   return (
-    <Box sx={{ width: '100%' }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+    <Box>
+      <Box sx={{  width: '100%' , borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="Afiliados Activos" {...a11yProps(0)} />
           <Tab label="Afiliados Inactivos" {...a11yProps(1)} />
