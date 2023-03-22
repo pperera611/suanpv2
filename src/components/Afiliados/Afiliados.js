@@ -21,14 +21,14 @@ function a11yProps(index) {
   };
 }
 
-export default function Afiliados() {
+export default function Afiliados(props) {
   
   const [value, setValue] = React.useState(0);
   const [afiliadosActivos, setAfiliadosActivos] = useState([]);
   const [afiliadosInactivos, setAfiliadosInactivos] = useState([]);
 
   const { response, error, loading } = useAxios("GET", "afiliados");
-  //console.log(response);
+  console.log(response);
 
   useEffect(() => {
     let lista_aux1 = [], lista_aux2 = [];

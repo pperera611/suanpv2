@@ -35,8 +35,7 @@ const DashboardAfiliados = (props) =>{
     setListFiltrada(props.lista);
   },[props.lista])
 
-  //console.log(props.lista);
-
+ 
   const handlerfilterList = useCallback((filtros) => {
 
     const filtroSocio = filtros.nroSocio.toUpperCase();
@@ -84,6 +83,5 @@ const DashboardAfiliados = (props) =>{
 
 export default (DashboardAfiliados);
 
-//{addAfiliado && (<NuevoAfiliado open={addAfiliado} onCloseDialogAddAfiliado={handlerAddDialogClose}/>)}
-//<Divider sx={{ my: 1 }} />
+
       

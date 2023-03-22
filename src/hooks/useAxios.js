@@ -22,13 +22,30 @@ const useAxios = (method, apiRoute, options = {}) => {
       setLoading(false);
     }
   };
+  const postData = async (postOptions = {}) => {
+    try {
+      setLoading(true);
+      const result = await axios({
+        method: "post",
+        url: `https://suanp-f6399-default-rtdb.firebaseio.com/${apiRoute}.json`,
+        ...options,
+        ...postOptions,
+      });
+      setResponse(result.data);
+      setError(null);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    useEffect(() => {
+  useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [method, apiRoute, JSON.stringify(options)]);
 
-  return {response, error, loading };
+  return {response, error, loading, postData };
 };
 
 

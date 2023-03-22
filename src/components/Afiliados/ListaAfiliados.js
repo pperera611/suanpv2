@@ -29,11 +29,6 @@ const columns = [
 export default function ListaAfiliados(props) {
 
   const rows = props.lista;
-   /*
-  const rows = [];
-  for(let i in props.lista)
-  rows.push(props.lista[i]);
- */
      
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(20);
@@ -47,9 +42,6 @@ export default function ListaAfiliados(props) {
     setPage(0);
   };
 
- 
-
- //console.log("lista: "+rows);
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
@@ -82,6 +74,7 @@ export default function ListaAfiliados(props) {
               .map((row) => {              
                 return (
                   <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                    
                     {columns.map((column) => {
                       const value = row[column.id];
                       //console.log(value);

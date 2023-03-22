@@ -14,7 +14,8 @@ import useDataApp from "../../hooks/useDataApp";
 import useAxios from "../../hooks/useAxios";
 //import { useAxios, useLazyAxios } from "use-axios-client"; //https://use-axios-client.io/
 import  {verificarNroCobro}  from "../../auxiliaries/funcAux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from 'react-router-dom';
+
 
 /* import DateFnsUtils from "@date-io/date-fns";
 import {
@@ -57,8 +58,8 @@ export default function FormAfiliado(props) {
 
     const {grados, localidades, unidades, afiliados, loading} = useDataApp();
     
-    const postAfiliado = useAxios(); 
-
+    const { postData } = useAxios('post', 'afiliados');
+    const navigate = useNavigate();
     //const postAfiliado  = useAxios("post","afiliados",{headers: { accept: "*/*" }});
       
     useEffect(() =>{
@@ -86,25 +87,21 @@ export default function FormAfiliado(props) {
 
   console.log(afiliados);
   const nroCobroIsUnique = (nroCobro) =>{
-    console.log(props.mode);
+    //console.log(props.mode);
     const afiliadosList = props.mode === "EDIT" ? Object.values(afiliadosAux) : Object.values(afiliados);
-    console.log("afiliadoList "+afiliadosList)
-    //console.log("nroCobro "+nroCobro)
+    //console.log("afiliadoList "+afiliadosList)
     const found = afiliadosList.find(e => e.nroSocio === Number(nroCobro));
     //console.log("found "+found)
     return found !== undefined;
     
   }
 
-  const onSubmit =  (userInfo) => {
+  const onSubmit =  async (userInfo) => {
       
       
     //if alta, 
-    postAfiliado.fetchData({
-        method: 'post',
-        url: 'afiliados',
-        headers: ({ accept: '*/*' }),
-        data:{
+    
+      const data = {
           id: 6,
           activo: true,
           nroSocio: Number(userInfo.nroSocio),
@@ -123,16 +120,16 @@ export default function FormAfiliado(props) {
           localidad: "MONTEVIDEO"
           
 
-        },  
-      })
+        }
+     
       //sino
       
-      /*
-      fetchData({
+      //----
+      await postData({
         data,
-      });*/
-      
-      console.log(userInfo);
+      });
+      navigate('/afiliados');
+      //console.log(userInfo);
       
     };
 
@@ -433,7 +430,7 @@ export default function FormAfiliado(props) {
                 <Divider />
                 <DialogActions>
                 <Link to="/afiliados" style={{ textDecoration: 'none' }}><Button onClick={handleClose}>Cancelar</Button></Link>
-                  <Button type="submit">
+                <Button type="submit">
                     {props.mode==="EDIT" ? "Modificar" : "Agregar"}
                   </Button>
                 </DialogActions>
