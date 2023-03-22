@@ -57,11 +57,11 @@ export default function FormAfiliado(props) {
 
     
     const {grados, localidades, unidades, afiliados} = useDataApp();
+    console.log(grados);
     
+    //const { fetchData } = useAxios('post', 'afiliados');
     
-    const dataAfiliadoPost  = useAxios();
-
-    console.log(afiliados);
+    //console.log(afiliados);
     
     useEffect(() =>{
              
@@ -95,34 +95,30 @@ export default function FormAfiliado(props) {
   const onSubmit =  (userInfo) => {
       
     //if alta, 
-    
-    dataAfiliadoPost.fetchData({
-        method: 'post',
-        url: '/afiliados.json',
-        headers: ({ accept: '*/*' }),
-        data:{
-          id: 6,
-          activo: true,
-          nroSocio: Number(userInfo.nroSocio),
-          nombre: userInfo.nombre,
-          apellido: userInfo.apellido,
-          //digitoVerificador: Number(userInfo.nroSocio.substring(5,6)),
-          direccion: userInfo.direccion,
-          telefono: userInfo.telefono,
-          email: userInfo.mail,
-          fechaNacimiento: "10-10-1987",
-          //grado: userInfo.grado._id,
-          //ua: userInfo.ua._id,
-          //localidad: userInfo.localidad._id
-          ua: "DEPARTAMENTO MONTEVIDEO",
-          grado: "PROFESIONAL 2A",
-          localidad: "MONTEVIDEO"
-          
-
-        },  
-      })
+    const data = {
+      id: 6,
+      activo: true,
+      nroSocio: Number(userInfo.nroSocio),
+      nombre: userInfo.nombre,
+      apellido: userInfo.apellido,
+      //digitoVerificador: Number(userInfo.nroSocio.substring(5,6)),
+      direccion: userInfo.direccion,
+      telefono: userInfo.telefono,
+      email: userInfo.mail,
+      fechaNacimiento: "10-10-1987",
+      //grado: userInfo.grado._id,
+      //ua: userInfo.ua._id,
+      //localidad: userInfo.localidad._id
+      ua: "DEPARTAMENTO MONTEVIDEO",
+      grado: "PROFESIONAL 2A",
+      localidad: "MONTEVIDEO",
+    };
       //sino
       
+      /*
+      fetchData({
+        data,
+      });*/
       
       console.log(userInfo);
       

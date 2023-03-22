@@ -59,8 +59,7 @@ const useDataApp = () => {
         }
       }, [dataGrados, dataLocalidades, dataUnidades, dataAfiliados]);
 
-   console.log("useDataApp")
-    
+       
     return {grados: data.grados,
             localidades: data.localidades,
             unidades: data.unidades,

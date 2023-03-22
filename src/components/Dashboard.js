@@ -102,7 +102,7 @@ function DashboardContent() {
           }}
         >
           <Toolbar />
-          <Container maxWidth sx={{ mt: 4, mb: 4 }}>
+          <Container maxWidth="true" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
 
             <Routes>
