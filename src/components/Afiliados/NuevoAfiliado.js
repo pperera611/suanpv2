@@ -17,7 +17,7 @@ export default function NuevoAfiliado(props) {
   return (
     <Modal isOpen={isModalOpen} tituloModal="Nuevo Afiliado">
         <Divider/>
-        <FormAfiliado onClose={closeModal}/>
+        <FormAfiliado onClose={closeModal} mode={"NEW"}/>
       
     </Modal>
   );

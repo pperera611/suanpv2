@@ -45,33 +45,31 @@ const messages = {
 
 export default function FormAfiliado(props) {
  
-    //props.loadData // si es true significa que vine navegando desde el boton de modificar
+    //props.mode // si es EDIT significa que vine navegando desde el boton de modificar, si es NEW del boton agregar
     //props.payload // tiene el nro de cobro del funcionario a modificar
     
-    const [afiliadosAux, setDataAfiliadosAux] = useState(); 
+    const [afiliadosAux, setAfiliadosAux] = useState(); 
     //para guardar los afiliados menos el que se esta editando, de esta manera
     //puedo controlar que NO controle que el nro de cobro esta repetido 
 
     const {register, control, handleSubmit, formState: { errors }, setValue} = //,setFocus
     useForm({mode: "onBlur"}, {defaultValues: {nroSocio: ''}});
 
+    const {grados, localidades, unidades, afiliados, loading} = useDataApp();
     
-    const {grados, localidades, unidades, afiliados} = useDataApp();
-    console.log(grados);
-    
-    //const { fetchData } = useAxios('post', 'afiliados');
-    
-    //console.log(afiliados);
-    
+    const postAfiliado = useAxios(); 
+
+    //const postAfiliado  = useAxios("post","afiliados",{headers: { accept: "*/*" }});
+      
     useEffect(() =>{
              
-        if(props.loadData){ // si quiero modificar....
+        if(props.mode === "EDIT"){ // si quiero modificar....
             //obtengo datos del afiliado
-            let afiliado = afiliados.find(e => e.nroSocio === props.payload);
+            let afiliado = Object.values(afiliados).find(e => e.nroSocio === props.payload);
           
             //tengo que sacar el afiliado de la lista para que no me haga la validacion de que ya existe el nro de cobro
-            let lista_aux = afiliados.filter(af => af.nroSocio !== props.payload)
-            setDataAfiliadosAux(lista_aux)
+            let lista_aux = Object.values(afiliados).filter(af => af.nroSocio !== props.payload)
+            setAfiliadosAux(lista_aux)
             //como el form se renderizo para modificar, tengo que cargar en los campos los valores del afiliado
             setValue('nroSocio', afiliado.nroSocio);
             //setFocus('nroSocio',{ shouldSelect: true })
@@ -80,39 +78,53 @@ export default function FormAfiliado(props) {
             
         }
 
-  },[afiliados,props.loadData,props.payload,setValue])
+  },[afiliados,props.mode,props.payload,setValue])
  
-  
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  console.log(afiliados);
   const nroCobroIsUnique = (nroCobro) =>{
-    
-    const afiliadosList = props.loadData ? afiliadosAux : afiliados;
+    console.log(props.mode);
+    const afiliadosList = props.mode === "EDIT" ? Object.values(afiliadosAux) : Object.values(afiliados);
+    console.log("afiliadoList "+afiliadosList)
+    //console.log("nroCobro "+nroCobro)
     const found = afiliadosList.find(e => e.nroSocio === Number(nroCobro));
-    
+    //console.log("found "+found)
     return found !== undefined;
     
   }
 
   const onSubmit =  (userInfo) => {
       
+      
     //if alta, 
-    const data = {
-      id: 6,
-      activo: true,
-      nroSocio: Number(userInfo.nroSocio),
-      nombre: userInfo.nombre,
-      apellido: userInfo.apellido,
-      //digitoVerificador: Number(userInfo.nroSocio.substring(5,6)),
-      direccion: userInfo.direccion,
-      telefono: userInfo.telefono,
-      email: userInfo.mail,
-      fechaNacimiento: "10-10-1987",
-      //grado: userInfo.grado._id,
-      //ua: userInfo.ua._id,
-      //localidad: userInfo.localidad._id
-      ua: "DEPARTAMENTO MONTEVIDEO",
-      grado: "PROFESIONAL 2A",
-      localidad: "MONTEVIDEO",
-    };
+    postAfiliado.fetchData({
+        method: 'post',
+        url: 'afiliados',
+        headers: ({ accept: '*/*' }),
+        data:{
+          id: 6,
+          activo: true,
+          nroSocio: Number(userInfo.nroSocio),
+          nombre: userInfo.nombre,
+          apellido: userInfo.apellido,
+          //digitoVerificador: Number(userInfo.nroSocio.substring(5,6)),
+          direccion: userInfo.direccion,
+          telefono: userInfo.telefono,
+          email: userInfo.mail,
+          fechaNacimiento: "10-10-1987",
+          //grado: userInfo.grado._id,
+          //ua: userInfo.ua._id,
+          //localidad: userInfo.localidad._id
+          ua: "DEPARTAMENTO MONTEVIDEO",
+          grado: "PROFESIONAL 2A",
+          localidad: "MONTEVIDEO"
+          
+
+        },  
+      })
       //sino
       
       /*
@@ -191,6 +203,7 @@ export default function FormAfiliado(props) {
               <Controller
                   name="nombre"
                   control={control}
+                  defaultValue=""
                   render={({ field }) => (
                 <TextField
                   {...field}
@@ -421,7 +434,7 @@ export default function FormAfiliado(props) {
                 <DialogActions>
                 <Link to="/afiliados" style={{ textDecoration: 'none' }}><Button onClick={handleClose}>Cancelar</Button></Link>
                   <Button type="submit">
-                    {props.loadData ? "Modificar" : "Agregar"}
+                    {props.mode==="EDIT" ? "Modificar" : "Agregar"}
                   </Button>
                 </DialogActions>
               </Item>

@@ -23,12 +23,14 @@ const useAxios = (method, apiRoute, options = {}) => {
     }
   };
 
-  useEffect(() => {
+    useEffect(() => {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [method, apiRoute, JSON.stringify(options)]);
 
-  return { response, error, loading, fetchData };
+  return {response, error, loading };
 };
+
+
 
 export default useAxios;
