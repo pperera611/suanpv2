@@ -24,7 +24,6 @@ const dataRequests = {
     },
 };
 
-
 const useDataApp = () => {
   const [data, setData] = useState({
     grados: [],
