@@ -3,22 +3,22 @@ import useAxios from "./useAxios";
 
 const dataRequests = {
     grados: {
-        method: "get",
+        method: "GET",
         url: "grados",
         headers: { accept: "*/*" },
     },
     localidades: {
-        method: "get",
+        method: "GET",
         url: "localidades",
         headers: { accept: "*/*" },
     },
     unidades: {
-        method: "get",
+        method: "GET",
         url: "unidades",
         headers: { accept: "*/*" },
     },
     afiliados: {
-        method: "get",
+        method: "GET",
         url: "afiliados",
         headers: { accept: "*/*" },
     },
@@ -32,7 +32,7 @@ const useDataApp = () => {
     unidades: [],
     afiliados: [],
   });
-
+  
   const dataGrados = useAxios(
     dataRequests.grados.method,
     dataRequests.grados.url,

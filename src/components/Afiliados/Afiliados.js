@@ -26,26 +26,32 @@ export default function Afiliados(props) {
   const [value, setValue] = React.useState(0);
   const [afiliadosActivos, setAfiliadosActivos] = useState([]);
   const [afiliadosInactivos, setAfiliadosInactivos] = useState([]);
+  const [reloadData, setReloadData] = useState(false);
 
-  const { response, error, loading } = useAxios("GET", "afiliados");
-  console.log(response);
+  const triggerReload = () => {
+    setReloadData(true);
+    //console.log("triggerReload");
+  };
+
+  const { response, error, loading } = useAxios("GET", "afiliados",{},reloadData);
+  //console.log(response);
 
   useEffect(() => {
+
     let lista_aux1 = [], lista_aux2 = [];
     for(let i in response){
-        if (response[i].activo)
-            lista_aux1.push(response[i])
-        else
-            lista_aux2.push(response[i])
+        if (response[i].activo) lista_aux1.push(response[i])
+        else lista_aux2.push(response[i])
     }
     setAfiliadosActivos(lista_aux1);
     setAfiliadosInactivos(lista_aux2);
 
-  }, [response]);
+  }, [response,reloadData]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
 
   let mensaje;
   if (error) {
@@ -56,6 +62,7 @@ export default function Afiliados(props) {
   }
   
   return (
+    
     <Box>
       <Box sx={{  width: '100%' , borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
@@ -65,10 +72,10 @@ export default function Afiliados(props) {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-      {loading || error ? mensaje : <DashboardAfiliados lista={afiliadosActivos} activo ={true}/>}
+      {loading || error ? mensaje : <DashboardAfiliados lista={afiliadosActivos} activo ={true} onReloadData={triggerReload}/>}
       </TabPanel>
       <TabPanel value={value} index={1}>
-      {loading || error ? mensaje : <DashboardAfiliados lista={afiliadosInactivos} activo ={false}/>}
+      {loading || error ? mensaje : <DashboardAfiliados lista={afiliadosInactivos} activo ={false} onReloadData={triggerReload}/>}
       </TabPanel>
       <TabPanel value={value} index={2}>
         Item Three

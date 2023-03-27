@@ -10,11 +10,10 @@ import TableRow from '@mui/material/TableRow';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import DeleteIcon from '@mui/icons-material/Delete';
-//import ModificarAfiliado from './ModificarAfiliado';
+import EditIcon from '@mui/icons-material/Edit';
+import Tooltip from '@mui/material/Tooltip';
 
-
-//import IconsOptions from "../UI/IconsOptions"; 
-
+import {Link } from "react-router-dom";
 
 const columns = [
   { id: 'nombre', label: 'Nombre', minWidth: 100 },
@@ -32,6 +31,7 @@ export default function ListaAfiliados(props) {
      
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(20);
+  
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -42,77 +42,86 @@ export default function ListaAfiliados(props) {
     setPage(0);
   };
 
-
+  
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden" }}>
-      <TableContainer sx={{ }}> {/*maxHeight: 440*/} 
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-           
-            <TableRow key={Math.random()}>
-              {columns.map((column) => (
+    <>
+     
+
+      <Paper sx={{ width: "100%", overflow: "hidden" }}>
+        <TableContainer sx={{}}>
+          {" "}
+          {/*maxHeight: 440*/}
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead>
+              <TableRow key={Math.random()}>
+                {columns.map((column) => (
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{ minWidth: column.minWidth }}
+                  >
+                    {column.label}
+                  </TableCell>
+                ))}
                 <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-              <TableCell
                   key="opciones"
                   align="center"
                   style={{ minWidth: 60 }}
                 >
                   Opciones
                 </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {              
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-                    
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      //console.log(value);
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === "number"
-                            ? column.format(value)
-                            : value}
-                        </TableCell>
-                      );
-                    })}
-                    <TableCell>
-                      <Stack direction="row" spacing={0}>
-                        <IconButton aria-label="delete">
-                          <DeleteIcon />
-                        </IconButton>
-
-                        <IconButton aria-label="edit">
-                          
-                        </IconButton>
-                      </Stack>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[20, 50, 100]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        labelRowsPerPage="Filas por página"
-      />
-    </Paper>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row) => {
+                  return (
+                    <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                      {columns.map((column) => {
+                        const value = row[column.id];
+                        //console.log(value);
+                        return (
+                          <TableCell key={column.id} align={column.align}>
+                            {column.format && typeof value === "number"
+                              ? column.format(value)
+                              : value}
+                          </TableCell>
+                        );
+                      })}
+                      <TableCell>
+                        <Stack direction="row" spacing={0}>
+                          <Tooltip title="Dar de baja afiliado">
+                            <IconButton aria-label="delete">
+                              <DeleteIcon />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Editar datos afiliado">
+                          <Link to={`/afiliados/${String(row.id)}/edit`} style={{ textDecoration: 'none' }}>
+                            <IconButton aria-label="edit">
+                              <EditIcon />
+                            </IconButton>
+                            </Link>
+                          </Tooltip>
+                        </Stack>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[20, 50, 100]}
+          component="div"
+          count={rows.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          labelRowsPerPage="Filas por página"
+        />
+      </Paper>
+    </>
   );
 }

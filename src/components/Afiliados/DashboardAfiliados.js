@@ -3,12 +3,12 @@ import ListaAfiliados from "./ListaAfiliados";
 import ExportExcelPDF from "../../helpers/ExportExcelPDF";
 import NuevoAfiliado from "./NuevoAfiliado";
 import Divider from "@mui/material/Divider";
-
 import {useEffect, useState, useCallback} from "react";
 import {Route, Routes, Link } from "react-router-dom";
 import ButtonNew from "../../helpers/ButtonNew";
 import React from "react";
 import { Stack } from "@mui/material";
+import ModificarAfiliado from "./ModificarAfiliado";
 
 
 const columns = [
@@ -58,7 +58,7 @@ const DashboardAfiliados = (props) =>{
     setListFiltrada(lista_filtrada);
   },[props.lista]);
 
-
+ 
   return (
     <>
       <Stack direction="row" spacing={1}>
@@ -75,7 +75,11 @@ const DashboardAfiliados = (props) =>{
       <Divider sx={{ my: 1 }} />
       <ListaAfiliados lista={listFiltrada} />
       <Routes>
-        <Route path="new" element={<NuevoAfiliado modalOpen={true}/>} />
+        
+        <Route path="new" element={<NuevoAfiliado modalOpen={true} onReloadData={props.onReloadData}/>} />
+        <Route
+          path=":id/edit"
+          element={<ModificarAfiliado  modalOpen={true} onReloadData={props.onReloadData} />} />
       </Routes>
     </>
   );
