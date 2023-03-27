@@ -10,7 +10,7 @@ import Divider from "@mui/material/Divider";
 import Autocomplete from "@mui/material/Autocomplete";
 //import DatePicker from "react-datepicker";
 //import "react-datepicker/dist/react-datepicker.css";
-import useDataApp from "../../hooks/useDataApp";
+
 import useAxios from "../../hooks/useAxios";
 //import { useAxios, useLazyAxios } from "use-axios-client"; //https://use-axios-client.io/
 import { verificarNroCobro } from "../../auxiliaries/funcAux";
@@ -51,6 +51,8 @@ export default function FormAfiliado(props) {
   //para guardar los afiliados menos el que se esta editando, de esta manera
   //puedo controlar que NO controle que el nro de cobro esta repetido
 
+  const {grados, localidades, unidades, afiliados} = props;
+
   const {
     register,
     control,
@@ -62,13 +64,12 @@ export default function FormAfiliado(props) {
     { defaultValues: { nroSocio: "" } }
   );
 
-  const { grados, localidades, unidades, afiliados, loading } = useDataApp();
-  
   const { postData } = useAxios("POST", "afiliados",{});
   const navigate = useNavigate();
-  console.log(afiliados); 
+  
+  //console.log(afiliados); 
   useEffect(() => {
-    if (props.mode === "EDIT") {
+    if (props.mode === "EDIT" && afiliados) {
       // si quiero modificar....
       //obtengo datos del afiliado
       
@@ -86,13 +87,14 @@ export default function FormAfiliado(props) {
       //setFocus('nroSocio',{ shouldSelect: true })
       setValue("nombre", afiliado.nombre);
       setValue("apellido", afiliado.apellido);
+      setValue("telefono",afiliado.telefono);
+      setValue("direccion",afiliado.direccion);
+      setValue("mail", afiliado.email);
+      
     }
   }, [afiliados, props.mode, props.id, setValue]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
+ 
   //console.log(afiliados);
   const nroCobroIsUnique = (nroCobro) => {
     //console.log(props.mode);

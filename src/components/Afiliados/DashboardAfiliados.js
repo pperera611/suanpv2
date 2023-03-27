@@ -9,7 +9,7 @@ import ButtonNew from "../../helpers/ButtonNew";
 import React from "react";
 import { Stack } from "@mui/material";
 import ModificarAfiliado from "./ModificarAfiliado";
-
+import useDataApp from "../../hooks/useDataApp";
 
 const columns = [
   { header: "Apellido", dataKey: "apellido" },
@@ -31,9 +31,13 @@ const DashboardAfiliados = (props) =>{
 
   const [listFiltrada, setListFiltrada] = useState([]);
 
+  const { grados, localidades, unidades, afiliados, loading } = useDataApp();
+
   useEffect(()=>{
     setListFiltrada(props.lista);
   },[props.lista])
+
+  
 
  
   const handlerfilterList = useCallback((filtros) => {
@@ -58,13 +62,17 @@ const DashboardAfiliados = (props) =>{
     setListFiltrada(lista_filtrada);
   },[props.lista]);
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
  
   return (
     <>
       <Stack direction="row" spacing={1}>
-        <Link to="new"><ButtonNew/></Link>
+        <Link to="new">
+          <ButtonNew />
+        </Link>
         <ExportExcelPDF
-          
           lista={listFiltrada}
           columns={columns}
           titulo="Afiliados"
@@ -75,11 +83,33 @@ const DashboardAfiliados = (props) =>{
       <Divider sx={{ my: 1 }} />
       <ListaAfiliados lista={listFiltrada} />
       <Routes>
-        
-        <Route path="new" element={<NuevoAfiliado modalOpen={true} onReloadData={props.onReloadData}/>} />
+        <Route
+          path="new"
+          element={
+            <NuevoAfiliado
+              modalOpen={true}
+              onReloadData={props.onReloadData}
+              grados={grados}
+              localidades={localidades}
+              unidades={unidades}
+              afiliados={afiliados}
+            />
+          }
+        />
         <Route
           path=":id/edit"
-          element={<ModificarAfiliado  modalOpen={true} onReloadData={props.onReloadData} />} />
+          element={
+            <ModificarAfiliado
+              modalOpen={true}
+              onReloadData={props.onReloadData}
+              grados={grados}
+              localidades={localidades}
+              unidades={unidades}
+              afiliados={afiliados}
+              
+            />
+          }
+        />
       </Routes>
     </>
   );
