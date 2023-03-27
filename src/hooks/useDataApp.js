@@ -53,6 +53,7 @@ const useDataApp = () => {
     { headers: dataRequests.afiliados.headers }
   );
 
+  
   useEffect(() => {
     const updateData = (key, value) => {
       setData((prevData) => ({ ...prevData, [key]: value }));
@@ -91,6 +92,7 @@ const useDataApp = () => {
     dataLocalidades.loading ||
     dataUnidades.loading ||
     dataAfiliados.loading,
+    
   };
 }
 

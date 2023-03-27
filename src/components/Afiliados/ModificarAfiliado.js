@@ -12,12 +12,20 @@ export default function ModificarAfiliado(props) {
     setIsModalOpen(false);
   };
    return (
-    <Modal isOpen={isModalOpen} tituloModal="Modificar Afiliado">
-        <Divider/>
-        <FormAfiliado onReloadData={props.onReloadData} onClose={closeModal} mode={"EDIT"} id={id}/>
-      
-    </Modal>
-  );
+     <Modal isOpen={isModalOpen} tituloModal="Modificar Afiliado">
+       <Divider />
+       <FormAfiliado
+         onReloadData={props.onReloadData}
+         onClose={closeModal}
+         mode={"EDIT"}
+         id={id}
+         grados={props.grados}
+         localidades={props.localidades}
+         unidades={props.unidades}
+         afiliados={props.afiliados}
+       />
+     </Modal>
+   );
   
   
 }
