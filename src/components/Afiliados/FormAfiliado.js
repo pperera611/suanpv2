@@ -10,9 +10,7 @@ import Divider from "@mui/material/Divider";
 import Autocomplete from "@mui/material/Autocomplete";
 //import DatePicker from "react-datepicker";
 //import "react-datepicker/dist/react-datepicker.css";
-
 import useAxios from "../../hooks/useAxios";
-//import { useAxios, useLazyAxios } from "use-axios-client"; //https://use-axios-client.io/
 import { verificarNroCobro } from "../../auxiliaries/funcAux";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -23,12 +21,10 @@ import {
 } from "@material-ui/pickers";
  */
 
-//https://www.paradigmadigital.com/dev/desarrollo-formularios-react/
-
 const patterns = {
   nombre: /^[A-Za-z]+$/i,
   apellido: /^[A-Za-z]+$/i,
-  mail: /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+  email: /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
   telefono: /^[0-9]+$/i,
   nroSocio: /^[0-9]+$/i,
 };
@@ -38,7 +34,7 @@ const messages = {
   nroSocio: "El número de socio introducido no es el correcto",
   nombre: "Debes introducir una cadena de texto correcta",
   apellido: "Debes introducir una cadena de texto correcta",
-  mail: "Debes introducir un correo valido",
+  email: "Debes introducir un correo valido",
   telefono: "Debes introducir un número de telefono",
   direccion: "Debe introducir una direccion de domicilio",
 };
@@ -48,11 +44,12 @@ export default function FormAfiliado(props) {
   //props.id // tiene el id del funcionario a modificar
 
   const [afiliadosAux, setAfiliadosAux] = useState();
+  const [keyAfiliadoEdit, setKeyAfiliadoEdit] = useState();
   //para guardar los afiliados menos el que se esta editando, de esta manera
   //puedo controlar que NO controle que el nro de cobro esta repetido
 
   const {grados, localidades, unidades, afiliados} = props;
-
+  const navigate = useNavigate();
   const {
     register,
     control,
@@ -63,10 +60,8 @@ export default function FormAfiliado(props) {
     { mode: "onBlur" },
     { defaultValues: { nroSocio: "" } }
   );
-
-  const { postData } = useAxios("POST", "afiliados",{});
-  const navigate = useNavigate();
-  
+  const { postData, putData} = useAxios("", "afiliados",{});
+    
   //console.log(afiliados); 
   useEffect(() => {
     if (props.mode === "EDIT" && afiliados) {
@@ -76,7 +71,8 @@ export default function FormAfiliado(props) {
       let afiliado = Object.values(afiliados).find(
         (e) => e.id === Number(props.id)
       );
-        console.log(afiliado);
+      setKeyAfiliadoEdit(afiliado.key);
+      //console.log(afiliado);
       //tengo que sacar el afiliado de la lista para que no me haga la validacion de que ya existe el nro de cobro
       let lista_aux = Object.values(afiliados).filter(
         (af) => af.id !== Number(props.id)
@@ -89,13 +85,26 @@ export default function FormAfiliado(props) {
       setValue("apellido", afiliado.apellido);
       setValue("telefono",afiliado.telefono);
       setValue("direccion",afiliado.direccion);
-      setValue("mail", afiliado.email);
+      setValue("email", afiliado.email);
+      setValue("grado",afiliado.grado);
+      setValue("localidad",afiliado.localidad);
+      setValue("ua",afiliado.ua);
+
       
     }
   }, [afiliados, props.mode, props.id, setValue]);
 
  
-  //console.log(afiliados);
+  const getOpObj = (option, options) => {
+    if (!option.id) option = options.find((op) => op.id === option);
+    return option;
+  };
+
+  const handleClose = () => {
+    props.onClose();
+  };
+
+  //verifica si el nro de cobro es unico en el sistema
   const nroCobroIsUnique = (nroCobro) => {
     //console.log(props.mode);
     const afiliadosList =
@@ -107,50 +116,64 @@ export default function FormAfiliado(props) {
     //console.log("found "+found)
     return found !== undefined;
   };
-
-  const onSubmit = async (userInfo) => {
-    //if alta,
-
-    const data = {
-      id: 6,
-      activo: true,
-      nroSocio: Number(userInfo.nroSocio),
-      nombre: userInfo.nombre,
-      apellido: userInfo.apellido,
-      //digitoVerificador: Number(userInfo.nroSocio.substring(5,6)),
-      direccion: userInfo.direccion,
-      telefono: userInfo.telefono,
-      email: userInfo.mail,
-      fechaNacimiento: "10-10-1987",
-      //grado: userInfo.grado._id,
-      //ua: userInfo.ua._id,
-      //localidad: userInfo.localidad._id
-      ua: "DEPARTAMENTO MONTEVIDEO",
-      grado: "PROFESIONAL 2A",
-      localidad: "MONTEVIDEO",
-    };
-
-    //sino
-    
-    //----
-    await postData({
-      data,
-    });
-    navigate("/afiliados");
-    props.onReloadData();
-    //console.log(userInfo);
-  };
-
-  const handleClose = () => {
-    props.onClose();
-  };
-
-  const getOpObj = (option, options) => {
-    if (!option._id) option = options.find((op) => op._id === option);
-    return option;
-  };
-
   
+  const onSubmit = async (userInfo) => {
+    
+    //console.log(userInfo);
+    if (props.mode==="NEW"){
+      //obtengo el id maximo hasta ahora ya que se que es correlativo
+      let  found = afiliados.reduce((anterior, actual) => {
+        return (anterior.id > actual.id) ? anterior : actual;
+      });
+      
+      let id_nuevo = Number(found.id)+1
+      const data = {id: id_nuevo,activo:true,...userInfo}
+      try {
+        await new Promise((resolve, reject) => {
+          postData({ data })
+            .then(() => resolve())
+            .catch(reject);
+        });
+      } catch (error) {
+        // Manejar el error si la promesa fue rechazada
+        console.error(error);
+        return;
+      }
+       /*MEJORA
+      let lista_aux = afiliados // 1- tomo la lista que tiene a todos los afiliados
+      lista_aux.push(data); // 2- agrego el afiliado corregido a la lista
+      props.onReloadData(lista_aux); //3 - paso la lista al componente padre para que la renderice y no tenga que consumir de la api
+      */
+
+    }
+    if (props.mode==="EDIT"){   
+      
+      const data = {id:Number(props.id), activo:true,...userInfo} 
+      try {
+        await new Promise((resolve, reject) => {
+          putData(keyAfiliadoEdit, { data })
+            .then(() => resolve())
+            .catch(reject);
+        });
+      } catch (error) {
+        // Manejar el error si la promesa fue rechazada
+        console.error(error);
+        return;
+      }
+      /*MEJORA 
+      let lista_aux = afiliadosAux // 1- tomo la lista que tiene a todos los afiliados menos al que se editó
+      lista_aux.push(data); // 2- agrego el afiliado corregido a la lista
+      setAfiliadosAux(lista_aux);
+      //console.log(afiliadosAux);
+      props.onReloadData(afiliadosAux); //3 - paso la lista al componente padre para que la renderice y no tenga que consumir de la api
+       */    
+    }
+
+    navigate("/afiliados"); //me redirijo al componente Afiliado
+    props.onReloadData(afiliadosAux);
+  };
+
+
   return (
     <Box sx={{ p: 2 }}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -158,7 +181,7 @@ export default function FormAfiliado(props) {
           <Grid item xs={4}>
             <Item>
               <Controller
-                name="nro-socio"
+                name="nroSocio"
                 control={control}
                 render={({ field }) => (
                   <TextField
@@ -294,28 +317,28 @@ export default function FormAfiliado(props) {
           <Grid item xs={6}>
             <Item>
               <Controller
-                name="mail"
+                name="email"
                 control={control}
                 defaultValue=""
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    id="mail"
+                    id="email"
                     label="Mail"
                     variant="outlined"
                     size="small"
                     fullWidth
-                    {...register("mail", {
+                    {...register("email", {
                       required: messages.required,
                       pattern: {
-                        value: patterns.mail,
-                        message: messages.mail,
+                        value: patterns.email,
+                        message: messages.email,
                       },
                     })}
                   />
                 )}
               />
-              {errors.mail && <p>{errors.mail.message}</p>}
+              {errors.email && <p>{errors.email.message}</p>}
             </Item>
           </Grid>
 
@@ -374,7 +397,7 @@ export default function FormAfiliado(props) {
                     options={grados}
                     getOptionLabel={(option) => getOpObj(option, grados).name}
                     isOptionEqualToValue={(option, value) =>
-                      value === undefined || option._id === value._id
+                      value === undefined || option.id === value.id
                     }
                     onChange={(event, values) => onChange(values)}
                     value={value}
@@ -385,6 +408,7 @@ export default function FormAfiliado(props) {
                         variant="outlined"
                         size="small"
                         fullWidth
+                        
                       />
                     )}
                   />
@@ -406,7 +430,7 @@ export default function FormAfiliado(props) {
                       getOpObj(option, localidades).name
                     }
                     isOptionEqualToValue={(option, value) =>
-                      value === undefined || option._id === value._id
+                      value === undefined || option.id === value.id
                     }
                     onChange={(event, values) => onChange(values)}
                     value={value}
@@ -436,7 +460,7 @@ export default function FormAfiliado(props) {
                     options={unidades}
                     getOptionLabel={(option) => getOpObj(option, unidades).name}
                     isOptionEqualToValue={(option, value) =>
-                      value === undefined || option._id === value._id
+                      value === undefined || option.id === value.id
                     }
                     onChange={(event, values) => onChange(values)}
                     value={value}

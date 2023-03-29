@@ -27,24 +27,51 @@ export default function Afiliados(props) {
   const [afiliadosActivos, setAfiliadosActivos] = useState([]);
   const [afiliadosInactivos, setAfiliadosInactivos] = useState([]);
   const [reloadData, setReloadData] = useState(false);
-
-  const triggerReload = () => {
-    setReloadData(true);
-    //console.log("triggerReload");
-  };
+  //const [listaReloadData, setlistaReloadData] = useState([]);
 
   const { response, error, loading } = useAxios("GET", "afiliados",{},reloadData);
-  //console.log(response);
+  
+  const triggerReload = (lista) => {
+     setReloadData(prev=>!prev);
+     console.log("triggerReload");
+     //console.log("lista: ", lista)
+     //setlistaReloadData(lista);
+    
+  };
+  
 
   useEffect(() => {
 
+    let lista = response;
+    console.log(lista);
     let lista_aux1 = [], lista_aux2 = [];
-    for(let i in response){
-        if (response[i].activo) lista_aux1.push(response[i])
-        else lista_aux2.push(response[i])
+    for(let i in lista){
+      //console.log(response[i]);
+
+      const {activo, apellido, direccion, nombre, email, fechaNacimiento,grado, id, localidad, nroSocio, telefono, ua, key} = lista[i];
+
+      const afiliado = {
+        activo: activo,
+        apellido: apellido,
+        direccion: direccion,
+        nombre: nombre,
+        email: email,
+        fechaNacimiento: fechaNacimiento,
+        grado: grado.name,
+        id: id,
+        localidad: localidad.name,
+        nroSocio: nroSocio,
+        telefono: telefono,
+        ua: ua.name,
+        key: key
+      };
+
+      if (lista[i].activo) lista_aux1.push(afiliado)
+      else lista_aux2.push(afiliado)
     }
     setAfiliadosActivos(lista_aux1);
     setAfiliadosInactivos(lista_aux2);
+
 
   }, [response,reloadData]);
 
