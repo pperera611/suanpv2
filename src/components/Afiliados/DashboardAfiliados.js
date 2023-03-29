@@ -61,9 +61,9 @@ const DashboardAfiliados = (props) =>{
         afiliado["nroSocio"].toString().includes(filtroSocio) &&
         afiliado["nombre"].includes(filtroNombre) &&
         afiliado["apellido"].includes(filtroApellido)  &&
-        afiliado["grado"].includes(filtroGrado) &&
-        afiliado["ua"].includes(filtroUA) &&
-        afiliado["localidad"].includes(filtroLocalidad)
+        afiliado["grado"].name.includes(filtroGrado) &&
+        afiliado["ua"].name.includes(filtroUA) &&
+        afiliado["localidad"].name.includes(filtroLocalidad)
     );
 
     setListFiltrada(lista_filtrada);

@@ -85,7 +85,7 @@ export default function ListaAfiliados(props) {
                           <TableCell key={column.id} align={column.align}>
                             {column.format && typeof value === "number"
                               ? column.format(value)
-                              : value}
+                              : (value.name === undefined? value: value.name)}
                           </TableCell>
                         );
                       })}

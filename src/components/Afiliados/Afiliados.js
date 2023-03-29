@@ -57,12 +57,12 @@ export default function Afiliados(props) {
         nombre: nombre,
         email: email,
         fechaNacimiento: fechaNacimiento,
-        grado: grado.name,
+        grado: grado,
         id: id,
-        localidad: localidad.name,
+        localidad: localidad,
         nroSocio: nroSocio,
         telefono: telefono,
-        ua: ua.name,
+        ua: ua,
         key: key
       };
 
