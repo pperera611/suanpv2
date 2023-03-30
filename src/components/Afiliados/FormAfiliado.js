@@ -72,11 +72,12 @@ export default function FormAfiliado(props) {
         (e) => e.id === Number(props.id)
       );
       setKeyAfiliadoEdit(afiliado.key);
-      //console.log(afiliado);
+      console.log("La key del afiliado a modificar es: ", afiliado.key);
       //tengo que sacar el afiliado de la lista para que no me haga la validacion de que ya existe el nro de cobro
       let lista_aux = Object.values(afiliados).filter(
         (af) => af.id !== Number(props.id)
       );
+      console.log("Lista sin la persona a modificar: ", lista_aux)
       setAfiliadosAux(lista_aux);
       //como el form se renderizo para modificar, tengo que cargar en los campos los valores del afiliado
       setValue("nroSocio", afiliado.nroSocio);
@@ -119,6 +120,7 @@ export default function FormAfiliado(props) {
   
   const onSubmit = async (userInfo) => {
     
+    let lista_aux = [];
     //console.log(userInfo);
     if (props.mode==="NEW"){
       //obtengo el id maximo hasta ahora ya que se que es correlativo
@@ -139,8 +141,8 @@ export default function FormAfiliado(props) {
         console.error(error);
         return;
       }
-       /*MEJORA
-      let lista_aux = afiliados // 1- tomo la lista que tiene a todos los afiliados
+      /*MEJORA
+      lista_aux = afiliados // 1- tomo la lista que tiene a todos los afiliados
       lista_aux.push(data); // 2- agrego el afiliado corregido a la lista
       props.onReloadData(lista_aux); //3 - paso la lista al componente padre para que la renderice y no tenga que consumir de la api
       */
@@ -148,7 +150,7 @@ export default function FormAfiliado(props) {
     }
     if (props.mode==="EDIT"){   
       
-      const data = {id:Number(props.id), activo:true,...userInfo} 
+      const data = {id:Number(props.id), key: keyAfiliadoEdit, activo:true,...userInfo} 
       try {
         await new Promise((resolve, reject) => {
           putData(keyAfiliadoEdit, { data })
@@ -160,17 +162,17 @@ export default function FormAfiliado(props) {
         console.error(error);
         return;
       }
-      /*MEJORA 
-      let lista_aux = afiliadosAux // 1- tomo la lista que tiene a todos los afiliados menos al que se editó
+      /*MEJORA*/ 
+      lista_aux = afiliadosAux // 1- tomo la lista que tiene a todos los afiliados menos al que se editó
       lista_aux.push(data); // 2- agrego el afiliado corregido a la lista
       setAfiliadosAux(lista_aux);
       //console.log(afiliadosAux);
-      props.onReloadData(afiliadosAux); //3 - paso la lista al componente padre para que la renderice y no tenga que consumir de la api
-       */    
+      //props.onReloadData(afiliadosAux); //3 - paso la lista al componente padre para que la renderice y no tenga que consumir de la api
+          
     }
 
-    navigate("/afiliados"); //me redirijo al componente Afiliado
     props.onReloadData(afiliadosAux);
+    navigate("/afiliados"); //me redirijo al componente Afiliado
   };
 
 

@@ -26,23 +26,34 @@ export default function Afiliados(props) {
   const [value, setValue] = React.useState(0);
   const [afiliadosActivos, setAfiliadosActivos] = useState([]);
   const [afiliadosInactivos, setAfiliadosInactivos] = useState([]);
-  const [reloadData, setReloadData] = useState(false);
-  //const [listaReloadData, setlistaReloadData] = useState([]);
+  //const [reloadData, setReloadData] = useState(false);
+  const [listaReloadData, setlistaReloadData] = useState([]);
 
-  const { response, error, loading } = useAxios("GET", "afiliados",{},reloadData);
+  const { response, error, loading } = useAxios("GET", "afiliados",{},);
   
   const triggerReload = (lista) => {
-     setReloadData(prev=>!prev);
+     //setReloadData(prev=>!prev);
      console.log("triggerReload");
      //console.log("lista: ", lista)
-     //setlistaReloadData(lista);
+     setlistaReloadData(lista);
     
   };
   
+  useEffect(() => {
+    const dataWithKeys = response
+      ? Object.entries(response).map(([key, value]) => {
+          return { ...value, key };
+        })
+      : [];
+    //console.log(dataWithKeys);
+    setlistaReloadData(dataWithKeys);
+  }, [response]);
+
 
   useEffect(() => {
 
-    let lista = response;
+    let lista = listaReloadData;
+    
     console.log(lista);
     let lista_aux1 = [], lista_aux2 = [];
     for(let i in lista){
@@ -73,7 +84,7 @@ export default function Afiliados(props) {
     setAfiliadosInactivos(lista_aux2);
 
 
-  }, [response,reloadData]);
+  }, [listaReloadData]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

@@ -28,25 +28,16 @@ const columns = [
 const DashboardAfiliados = (props) =>{
 
   const [listFiltrada, setListFiltrada] = useState([]);
-  const [afiliados_with_keys, setAfiliados_with_keys] = useState([]);
+  //const [afiliados_with_keys, setAfiliados_with_keys] = useState([]);
 
-  const { grados, localidades, unidades, afiliados, loading } = useDataApp();
+  const { grados, localidades, unidades, loading } = useDataApp();
 
   
   useEffect(()=>{
     setListFiltrada(props.lista);
   },[props.lista])
 
-  useEffect(() => {
-    const dataWithKeys = afiliados
-      ? Object.entries(afiliados).map(([key, value]) => {
-          return { ...value, key };
-        })
-      : [];
-    //console.log(dataWithKeys);
-    setAfiliados_with_keys(dataWithKeys);
-  }, [afiliados]);
-
+  
   const handlerfilterList = useCallback((filtros) => {
 
     const filtroSocio = filtros.nroSocio.toUpperCase();
@@ -99,7 +90,7 @@ const DashboardAfiliados = (props) =>{
               grados={grados}
               localidades={localidades}
               unidades={unidades}
-              afiliados={afiliados_with_keys}
+              afiliados={props.lista}
             />
           }
         />
@@ -112,7 +103,7 @@ const DashboardAfiliados = (props) =>{
               grados={grados}
               localidades={localidades}
               unidades={unidades}
-              afiliados={afiliados_with_keys}
+              afiliados={props.lista}
               
             />
           }
