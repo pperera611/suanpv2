@@ -72,12 +72,12 @@ export default function FormAfiliado(props) {
         (e) => e.id === Number(props.id)
       );
       setKeyAfiliadoEdit(afiliado.key);
-      console.log("La key del afiliado a modificar es: ", afiliado.key);
+      //console.log("La key del afiliado a modificar es: ", afiliado.key);
       //tengo que sacar el afiliado de la lista para que no me haga la validacion de que ya existe el nro de cobro
       let lista_aux = Object.values(afiliados).filter(
         (af) => af.id !== Number(props.id)
       );
-      console.log("Lista sin la persona a modificar: ", lista_aux)
+      //console.log("Lista sin la persona a modificar: ", lista_aux)
       setAfiliadosAux(lista_aux);
       //como el form se renderizo para modificar, tengo que cargar en los campos los valores del afiliado
       setValue("nroSocio", afiliado.nroSocio);
@@ -107,14 +107,13 @@ export default function FormAfiliado(props) {
 
   //verifica si el nro de cobro es unico en el sistema
   const nroCobroIsUnique = (nroCobro) => {
-    //console.log(props.mode);
     const afiliadosList =
       props.mode === "EDIT"
         ? Object.values(afiliadosAux)
         : Object.values(afiliados);
-    //console.log("afiliadoList "+afiliadosList)
+   
     const found = afiliadosList.find((e) => e.nroSocio === Number(nroCobro));
-    //console.log("found "+found)
+   
     return found !== undefined;
   };
   
@@ -129,23 +128,21 @@ export default function FormAfiliado(props) {
       });
       
       let id_nuevo = Number(found.id)+1
-      const data = {id: id_nuevo,activo:true,...userInfo}
+      let data = {id: id_nuevo,activo:true,...userInfo}
       try {
-        await new Promise((resolve, reject) => {
-          postData({ data })
-            .then(() => resolve())
-            .catch(reject);
-        });
+        const postDataResponse = await postData({ data }); // obtengo la key del afiliado agregado porque lo preciso por si lo quiero editar
+        //console.log("Respuesta de postData:", postDataResponse.name);
+        data = {key: postDataResponse.name, ...data}
       } catch (error) {
         // Manejar el error si la promesa fue rechazada
         console.error(error);
         return;
       }
-      /*MEJORA
+      /*MEJORA*/
       lista_aux = afiliados // 1- tomo la lista que tiene a todos los afiliados
-      lista_aux.push(data); // 2- agrego el afiliado corregido a la lista
+      lista_aux.push(data); // 2- agrego el nuevo afiliado a la lista
       props.onReloadData(lista_aux); //3 - paso la lista al componente padre para que la renderice y no tenga que consumir de la api
-      */
+  
 
     }
     if (props.mode==="EDIT"){   
@@ -166,12 +163,11 @@ export default function FormAfiliado(props) {
       lista_aux = afiliadosAux // 1- tomo la lista que tiene a todos los afiliados menos al que se editó
       lista_aux.push(data); // 2- agrego el afiliado corregido a la lista
       setAfiliadosAux(lista_aux);
-      //console.log(afiliadosAux);
-      //props.onReloadData(afiliadosAux); //3 - paso la lista al componente padre para que la renderice y no tenga que consumir de la api
-          
+      props.onReloadData(afiliadosAux); //3 - paso la lista al componente padre para que la renderice y no tenga que consumir de la api
+               
     }
 
-    props.onReloadData(afiliadosAux);
+    
     navigate("/afiliados"); //me redirijo al componente Afiliado
   };
 

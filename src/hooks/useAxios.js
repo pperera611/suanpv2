@@ -36,23 +36,27 @@ const useAxios = (method, apiRoute, options = {}, reloadFlag = false) => {
   };
 
   const postData = async (postOptions = {}) => {
-    try {
-      setLoading(true);
-      const url = await getUrlWithAuth(`https://suanp-f6399-default-rtdb.firebaseio.com/${apiRoute}.json`);
-      const result = await axios({
-        method: "post",
-        url,
-        ...options,
-        ...postOptions,
-      });
-      setResponse(result.data);
-
-      setError(null);
-    } catch (error) {
-      setError(error);
-    } finally {
-      setLoading(false);
-    }
+    return new Promise(async (resolve, reject) => {
+      try {
+        setLoading(true);
+        const url = await getUrlWithAuth(`https://suanp-f6399-default-rtdb.firebaseio.com/${apiRoute}.json`);
+        const result = await axios({
+          method: "post",
+          url,
+          ...options,
+          ...postOptions,
+        });
+        setResponse(result.data);
+  
+        setError(null);
+        resolve(result.data);
+      } catch (error) {
+        setError(error);
+        reject(error);
+      } finally {
+        setLoading(false);
+      }
+    });
   };
 
   const putData = async (id, putOptions = {}) => {

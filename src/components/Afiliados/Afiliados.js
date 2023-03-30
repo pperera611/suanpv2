@@ -26,17 +26,13 @@ export default function Afiliados(props) {
   const [value, setValue] = React.useState(0);
   const [afiliadosActivos, setAfiliadosActivos] = useState([]);
   const [afiliadosInactivos, setAfiliadosInactivos] = useState([]);
-  //const [reloadData, setReloadData] = useState(false);
   const [listaReloadData, setlistaReloadData] = useState([]);
 
   const { response, error, loading } = useAxios("GET", "afiliados",{},);
   
   const triggerReload = (lista) => {
-     //setReloadData(prev=>!prev);
-     console.log("triggerReload");
-     //console.log("lista: ", lista)
-     setlistaReloadData(lista);
-    
+     //console.log("triggerReload");
+      setlistaReloadData(lista);
   };
   
   useEffect(() => {
@@ -53,12 +49,10 @@ export default function Afiliados(props) {
   useEffect(() => {
 
     let lista = listaReloadData;
-    
-    console.log(lista);
+    //console.log(lista);
     let lista_aux1 = [], lista_aux2 = [];
     for(let i in lista){
-      //console.log(response[i]);
-
+      
       const {activo, apellido, direccion, nombre, email, fechaNacimiento,grado, id, localidad, nroSocio, telefono, ua, key} = lista[i];
 
       const afiliado = {
@@ -83,7 +77,6 @@ export default function Afiliados(props) {
     setAfiliadosActivos(lista_aux1);
     setAfiliadosInactivos(lista_aux2);
 
-
   }, [listaReloadData]);
 
   const handleChange = (event, newValue) => {
@@ -100,7 +93,6 @@ export default function Afiliados(props) {
   }
   
   return (
-    
     <Box>
       <Box sx={{  width: '100%' , borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
