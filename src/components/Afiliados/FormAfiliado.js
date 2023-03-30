@@ -37,6 +37,7 @@ const messages = {
   email: "Debes introducir un correo valido",
   telefono: "Debes introducir un número de telefono",
   direccion: "Debe introducir una direccion de domicilio",
+  //grado: "Debe seleccionar un grado para el afiliado"
 };
 
 export default function FormAfiliado(props) {
@@ -390,6 +391,11 @@ export default function FormAfiliado(props) {
                 control={control}
                 name="grado"
                 defaultValue={null}
+                rules={{
+                  validate: (value) =>
+                    value !== null ||
+                    messages.required,
+                }}
                 render={({ field: { onChange, value } }) => (
                   <Autocomplete
                     options={grados}
@@ -406,12 +412,12 @@ export default function FormAfiliado(props) {
                         variant="outlined"
                         size="small"
                         fullWidth
-                        
                       />
                     )}
                   />
                 )}
               />
+              {errors.grado && <p>{errors.grado.message}</p>}
             </Item>
           </Grid>
 
@@ -421,6 +427,11 @@ export default function FormAfiliado(props) {
                 control={control}
                 name="localidad"
                 defaultValue={null}
+                rules={{
+                  validate: (value) =>
+                    value !== null ||
+                    messages.required,
+                }}
                 render={({ field: { onChange, value } }) => (
                   <Autocomplete
                     options={localidades}
@@ -444,6 +455,7 @@ export default function FormAfiliado(props) {
                   />
                 )}
               />
+              {errors.localidad && <p>{errors.localidad.message}</p>}
             </Item>
           </Grid>
 
@@ -453,6 +465,11 @@ export default function FormAfiliado(props) {
                 control={control}
                 name="ua"
                 defaultValue={null}
+                rules={{
+                  validate: (value) =>
+                    value !== null ||
+                    messages.required,
+                }}
                 render={({ field: { onChange, value } }) => (
                   <Autocomplete
                     options={unidades}
@@ -474,6 +491,7 @@ export default function FormAfiliado(props) {
                   />
                 )}
               />
+              {errors.ua && <p>{errors.ua.message}</p>}
             </Item>
           </Grid>
 
