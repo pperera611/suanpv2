@@ -11,12 +11,10 @@ import Autocomplete from "@mui/material/Autocomplete";
 import useAxios from "../../hooks/useAxios";
 import { verificarNroCobro } from "../../auxiliaries/funcAux";
 import { Link, useNavigate } from "react-router-dom";
-import { DatePicker } from '@mui/x-date-pickers';
+import { DatePicker, } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
-import { format } from 'date-fns';
-
-
+import {parseISO} from 'date-fns';
 
 const patterns = {
   nombre: /^[A-Za-z]+$/i,
@@ -60,7 +58,7 @@ export default function FormAfiliado(props) {
     
   //console.log(afiliados); 
   useEffect(() => {
-
+    console.log(afiliados);
     if (props.mode === "EDIT" && afiliados) {
       // si quiero modificar....
       //obtengo datos del afiliado
@@ -86,7 +84,10 @@ export default function FormAfiliado(props) {
       setValue("grado",afiliado.grado);
       setValue("localidad",afiliado.localidad);
       setValue("ua",afiliado.ua);
-      setValue("fechaNacimiento",afiliado.fechaNacimiento)
+
+      console.log("la fecha cruda viene: ", afiliado.fechaNacimiento);
+
+      setValue("fechaNacimiento",afiliado.fechaNacimiento);
     }
   }, [afiliados, props.mode, props.id, setValue]);
 
@@ -113,7 +114,11 @@ export default function FormAfiliado(props) {
   };
   
   const onSubmit = async (userInfo) => {
+
     
+    
+    //const fecha =  userInfo.fechaNacimiento;
+
     let lista_aux = [];
     //console.log(userInfo);
     if (props.mode==="NEW"){
@@ -123,7 +128,7 @@ export default function FormAfiliado(props) {
       });
       
       let id_nuevo = Number(found.id)+1
-      let data = {id: id_nuevo,activo:true, fechaNacimiento: format(userInfo.fechaNacimiento,'dd-MM-yyyy'),...userInfo}
+      let data = {id: id_nuevo,activo:true,...userInfo}
       try {
         const postDataResponse = await postData({ data }); // obtengo la key del afiliado agregado porque lo preciso por si lo quiero editar
         //console.log("Respuesta de postData:", postDataResponse.name);
@@ -136,13 +141,15 @@ export default function FormAfiliado(props) {
       /*MEJORA*/
       lista_aux = afiliados // 1- tomo la lista que tiene a todos los afiliados
       lista_aux.push(data); // 2- agrego el nuevo afiliado a la lista
+      
       props.onReloadData(lista_aux); //3 - paso la lista al componente padre para que la renderice y no tenga que consumir de la api
 
+      
     }
 
     if (props.mode==="EDIT"){   
       
-      const data = {id:Number(props.id), key: keyAfiliadoEdit, activo:true,fechaNacimiento: format(userInfo.fechaNacimiento,'dd-MM-yyyy'),...userInfo} 
+      const data = {id:Number(props.id), activo: true, fechaNacimiento: String(userInfo.fechaNacimiento), key: keyAfiliadoEdit,...userInfo} 
       try {
         await new Promise((resolve, reject) => {
           putData(keyAfiliadoEdit, { data })
@@ -156,19 +163,23 @@ export default function FormAfiliado(props) {
       }
       /*MEJORA*/ 
       lista_aux = afiliadosAux // 1- tomo la lista que tiene a todos los afiliados menos al que se editó
-      lista_aux.push(data); // 2- agrego el afiliado corregido a la lista
+      lista_aux.push("el data: ",data); // 2- agrego el afiliado corregido a la lista
       setAfiliadosAux(lista_aux);
+      
       props.onReloadData(afiliadosAux); //3 - paso la lista al componente padre para que la renderice y no tenga que consumir de la api
-               
+      
+      
     }
    
     navigate("/afiliados"); //me redirijo al componente Afiliado
+
+    
   };
 
 
   return (
     <Box sx={{ p: 2 }}>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <LocalizationProvider dateAdapter={AdapterDateFns} >
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
             <Grid item xs={4}>

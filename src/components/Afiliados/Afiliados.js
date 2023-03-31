@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import TabPanel from "../../helpers/TabPanel";
 import useAxios from "../../hooks/useAxios";
 import DashboardAfiliados from "../Afiliados/DashboardAfiliados";
+import {parseISO} from 'date-fns';
 
 TabPanel.propTypes = {
   children: PropTypes.node,
@@ -61,7 +62,7 @@ export default function Afiliados(props) {
         direccion: direccion,
         nombre: nombre,
         email: email,
-        fechaNacimiento: fechaNacimiento,
+        fechaNacimiento: parseISO(fechaNacimiento),
         grado: grado,
         id: id,
         localidad: localidad,
