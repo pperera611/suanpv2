@@ -8,18 +8,15 @@ import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import Autocomplete from "@mui/material/Autocomplete";
-//import DatePicker from "react-datepicker";
-//import "react-datepicker/dist/react-datepicker.css";
 import useAxios from "../../hooks/useAxios";
 import { verificarNroCobro } from "../../auxiliaries/funcAux";
 import { Link, useNavigate } from "react-router-dom";
+import { DatePicker } from '@mui/x-date-pickers';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
+import { format } from 'date-fns';
 
-/* import DateFnsUtils from "@date-io/date-fns";
-import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider
-} from "@material-ui/pickers";
- */
+
 
 const patterns = {
   nombre: /^[A-Za-z]+$/i,
@@ -30,7 +27,7 @@ const patterns = {
 };
 
 const messages = {
-  required: "Este campo es obligatorio",
+  required: "Este campo es obligatorio", 
   nroSocio: "El número de socio introducido no es el correcto",
   nombre: "Debes introducir una cadena de texto correcta",
   apellido: "Debes introducir una cadena de texto correcta",
@@ -57,18 +54,16 @@ export default function FormAfiliado(props) {
     handleSubmit,
     formState: { errors },
     setValue,
-  } = useForm( //,setFocus
-    { mode: "onBlur" },
-    { defaultValues: { nroSocio: "" } }
-  );
+  } = useForm({ mode: "onBlur" });
+
   const { postData, putData} = useAxios("", "afiliados",{});
     
   //console.log(afiliados); 
   useEffect(() => {
+
     if (props.mode === "EDIT" && afiliados) {
       // si quiero modificar....
       //obtengo datos del afiliado
-      
       let afiliado = Object.values(afiliados).find(
         (e) => e.id === Number(props.id)
       );
@@ -91,8 +86,7 @@ export default function FormAfiliado(props) {
       setValue("grado",afiliado.grado);
       setValue("localidad",afiliado.localidad);
       setValue("ua",afiliado.ua);
-
-      
+      setValue("fechaNacimiento",afiliado.fechaNacimiento)
     }
   }, [afiliados, props.mode, props.id, setValue]);
 
@@ -129,7 +123,7 @@ export default function FormAfiliado(props) {
       });
       
       let id_nuevo = Number(found.id)+1
-      let data = {id: id_nuevo,activo:true,...userInfo}
+      let data = {id: id_nuevo,activo:true, fechaNacimiento: format(userInfo.fechaNacimiento,'dd-MM-yyyy'),...userInfo}
       try {
         const postDataResponse = await postData({ data }); // obtengo la key del afiliado agregado porque lo preciso por si lo quiero editar
         //console.log("Respuesta de postData:", postDataResponse.name);
@@ -143,12 +137,12 @@ export default function FormAfiliado(props) {
       lista_aux = afiliados // 1- tomo la lista que tiene a todos los afiliados
       lista_aux.push(data); // 2- agrego el nuevo afiliado a la lista
       props.onReloadData(lista_aux); //3 - paso la lista al componente padre para que la renderice y no tenga que consumir de la api
-  
 
     }
+
     if (props.mode==="EDIT"){   
       
-      const data = {id:Number(props.id), key: keyAfiliadoEdit, activo:true,...userInfo} 
+      const data = {id:Number(props.id), key: keyAfiliadoEdit, activo:true,fechaNacimiento: format(userInfo.fechaNacimiento,'dd-MM-yyyy'),...userInfo} 
       try {
         await new Promise((resolve, reject) => {
           putData(keyAfiliadoEdit, { data })
@@ -167,349 +161,357 @@ export default function FormAfiliado(props) {
       props.onReloadData(afiliadosAux); //3 - paso la lista al componente padre para que la renderice y no tenga que consumir de la api
                
     }
-
-    
+   
     navigate("/afiliados"); //me redirijo al componente Afiliado
   };
 
 
   return (
     <Box sx={{ p: 2 }}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid container spacing={2}>
-          <Grid item xs={4}>
-            <Item>
-              <Controller
-                name="nroSocio"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    id="nroSocio"
-                    {...field}
-                    label={"Número de Socio"}
-                    variant="outlined"
-                    size="small"
-                    //InputLabelProps={{ shrink: true }}
-                    fullWidth
-                    {...register("nroSocio", {
-                      validate: {
-                        val1: (v) =>
-                          verificarNroCobro(v) ||
-                          "El formato del nro no es correcto",
-                        val2: (v) =>
-                          !nroCobroIsUnique(v) ||
-                          "Ya existe un afiliado con ese nro de cobro",
-                      },
-
-                      required: messages.required,
-                      minLength: {
-                        value: 6,
-                        message: messages.nroSocio,
-                      },
-                      maxLength: {
-                        value: 6,
-                        message: messages.nroSocio,
-                      },
-                      pattern: {
-                        value: patterns.nroSocio,
-                        message: messages.nroSocio,
-                      },
-                    })}
-                  />
-                )}
-              />
-              {errors.nroSocio && <p>{errors.nroSocio.message}</p>}
-            </Item>
-          </Grid>
-
-          <Grid item xs={6}></Grid>
-          <Grid item xs={6}>
-            <Item>
-              <Controller
-                name="nombre"
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    id="nombre"
-                    label="Nombre"
-                    variant="outlined"
-                    size="small"
-                    //InputLabelProps={{ shrink: true }}
-                    fullWidth
-                    {...register("nombre", {
-                      required: messages.required,
-                      pattern: {
-                        value: patterns.nombre,
-                        message: messages.nombre,
-                      },
-                    })}
-                  />
-                )}
-              />
-              {errors.nombre && <p>{errors.nombre.message}</p>}
-            </Item>
-          </Grid>
-          <Grid item xs={6}>
-            <Item>
-              <Controller
-                name="apellido"
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    id="apellido"
-                    label="Apellido"
-                    variant="outlined"
-                    size="small"
-                    fullWidth
-                    {...register("apellido", {
-                      required: messages.required,
-                      pattern: {
-                        value: patterns.apellido,
-                        message: messages.apellido,
-                      },
-                    })}
-                  />
-                )}
-              />
-              {errors.apellido && <p>{errors.apellido.message}</p>}
-            </Item>
-          </Grid>
-          <Grid item xs={6}>
-            <Item>
-              <Controller
-                name="telefono"
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    id="telefono"
-                    label="Telefono"
-                    variant="outlined"
-                    size="small"
-                    fullWidth
-                    {...register("telefono", {
-                      required: messages.required,
-                      minLength: {
-                        value: 8,
-                        message: messages.telefono,
-                      },
-                      maxLength: {
-                        value: 9,
-                        message: messages.telefono,
-                      },
-                      pattern: {
-                        value: patterns.telefono,
-                        message: messages.telefono,
-                      },
-                    })}
-                  />
-                )}
-              />
-              {errors.telefono && <p>{errors.telefono.message}</p>}
-            </Item>
-          </Grid>
-          <Grid item xs={6}>
-            <Item>
-              <Controller
-                name="email"
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    id="email"
-                    label="Mail"
-                    variant="outlined"
-                    size="small"
-                    fullWidth
-                    {...register("email", {
-                      required: messages.required,
-                      pattern: {
-                        value: patterns.email,
-                        message: messages.email,
-                      },
-                    })}
-                  />
-                )}
-              />
-              {errors.email && <p>{errors.email.message}</p>}
-            </Item>
-          </Grid>
-
-          {/* <Grid item xs={2}>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
               <Item>
-                 <Controller
+                <Controller
+                  name="nroSocio"
                   control={control}
-                  name="dateInput"
-                  //fullWidth
                   render={({ field }) => (
-                  <DatePicker
-                      
-                      placeholderText="Fecha"
-                      onChange={(date) => field.onChange(date)}
-                      selected={field.value}
-                      
+                    <TextField
+                      id="nroSocio"
+                      {...field}
+                      label={"Número de Socio"}
+                      variant="outlined"
+                      size="small"
+                      //InputLabelProps={{ shrink: true }}
+                      fullWidth
+                      {...register("nroSocio", {
+                        validate: {
+                          val1: (v) =>
+                            verificarNroCobro(v) ||
+                            "El formato del nro no es correcto",
+                          val2: (v) =>
+                            !nroCobroIsUnique(v) ||
+                            "Ya existe un afiliado con ese nro de cobro",
+                        },
+
+                        required: messages.required,
+                        minLength: {
+                          value: 6,
+                          message: messages.nroSocio,
+                        },
+                        maxLength: {
+                          value: 6,
+                          message: messages.nroSocio,
+                        },
+                        pattern: {
+                          value: patterns.nroSocio,
+                          message: messages.nroSocio,
+                        },
+                      })}
                     />
                   )}
-                /> 
-                
+                />
+                {errors.nroSocio && <p>{errors.nroSocio.message}</p>}
               </Item>
-            </Grid> */}
+            </Grid>
 
-          <Grid item xs={12}>
-            <Item>
-              <Controller
-                name="direccion"
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    id="direccion"
-                    label="Dirección"
-                    variant="outlined"
-                    size="small"
-                    fullWidth
-                    {...register("direccion", {
-                      required: messages.required,
-                    })}
-                  />
-                )}
-              />
-              {errors.direccion && <p>{errors.direccion.message}</p>}
-            </Item>
-          </Grid>
+            <Grid item xs={6}></Grid>
+            <Grid item xs={6}>
+              <Item>
+                <Controller
+                  name="nombre"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      id="nombre"
+                      label="Nombre"
+                      variant="outlined"
+                      size="small"
+                      //InputLabelProps={{ shrink: true }}
+                      fullWidth
+                      {...register("nombre", {
+                        required: messages.required,
+                        pattern: {
+                          value: patterns.nombre,
+                          message: messages.nombre,
+                        },
+                      })}
+                    />
+                  )}
+                />
+                {errors.nombre && <p>{errors.nombre.message}</p>}
+              </Item>
+            </Grid>
+            <Grid item xs={6}>
+              <Item>
+                <Controller
+                  name="apellido"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      id="apellido"
+                      label="Apellido"
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      {...register("apellido", {
+                        required: messages.required,
+                        pattern: {
+                          value: patterns.apellido,
+                          message: messages.apellido,
+                        },
+                      })}
+                    />
+                  )}
+                />
+                {errors.apellido && <p>{errors.apellido.message}</p>}
+              </Item>
+            </Grid>
+            <Grid item xs={6}>
+              <Item>
+                <Controller
+                  name="telefono"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      id="telefono"
+                      label="Telefono"
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      {...register("telefono", {
+                        required: messages.required,
+                        minLength: {
+                          value: 8,
+                          message: messages.telefono,
+                        },
+                        maxLength: {
+                          value: 9,
+                          message: messages.telefono,
+                        },
+                        pattern: {
+                          value: patterns.telefono,
+                          message: messages.telefono,
+                        },
+                      })}
+                    />
+                  )}
+                />
+                {errors.telefono && <p>{errors.telefono.message}</p>}
+              </Item>
+            </Grid>
+            <Grid item xs={6}>
+              <Item>
+                <Controller
+                  name="email"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      id="email"
+                      label="Mail"
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      {...register("email", {
+                        required: messages.required,
+                        pattern: {
+                          value: patterns.email,
+                          message: messages.email,
+                        },
+                      })}
+                    />
+                  )}
+                />
+                {errors.email && <p>{errors.email.message}</p>}
+              </Item>
+            </Grid>
 
-          <Grid item xs={7}>
-            <Item>
-              <Controller
-                control={control}
-                name="grado"
-                defaultValue={null}
-                rules={{
-                  validate: (value) =>
-                    value !== null ||
-                    messages.required,
-                }}
-                render={({ field: { onChange, value } }) => (
-                  <Autocomplete
-                    options={grados}
-                    getOptionLabel={(option) => getOpObj(option, grados).name}
-                    isOptionEqualToValue={(option, value) =>
-                      value === undefined || option.id === value.id
-                    }
-                    onChange={(event, values) => onChange(values)}
-                    value={value}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Grado"
-                        variant="outlined"
-                        size="small"
-                        fullWidth
-                      />
-                    )}
-                  />
-                )}
-              />
-              {errors.grado && <p>{errors.grado.message}</p>}
-            </Item>
-          </Grid>
+            <Grid item xs={6}>
+              <Item>
+                <Controller
+                  name="fechaNacimiento"
+                  control={control}
+                  defaultValue={null}
+                  rules={{
+                    validate: (value) => value !== null || messages.required,
+                  }}
+                  render={({ field }) => (
+                    <DatePicker
+                      {...field}
+                      label="Fecha de nacimiento"
+                      format="dd/MM/yyyy"
+                      mask="__/__/____"
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          fullWidth
+                          variant="outlined"
+                          size="small"
+                        />
+                      )}
+                      onChange={(date) => field.onChange(date)}
+                    />
+                  )}
+                />
+                {errors.fechaNacimiento && <p>{errors.fechaNacimiento.message}</p>}
+              </Item>
+            </Grid>
 
-          <Grid item xs={5}>
-            <Item>
-              <Controller
-                control={control}
-                name="localidad"
-                defaultValue={null}
-                rules={{
-                  validate: (value) =>
-                    value !== null ||
-                    messages.required,
-                }}
-                render={({ field: { onChange, value } }) => (
-                  <Autocomplete
-                    options={localidades}
-                    getOptionLabel={(option) =>
-                      getOpObj(option, localidades).name
-                    }
-                    isOptionEqualToValue={(option, value) =>
-                      value === undefined || option.id === value.id
-                    }
-                    onChange={(event, values) => onChange(values)}
-                    value={value}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Localidad"
-                        variant="outlined"
-                        size="small"
-                        fullWidth
-                      />
-                    )}
-                  />
-                )}
-              />
-              {errors.localidad && <p>{errors.localidad.message}</p>}
-            </Item>
-          </Grid>
+            <Grid item xs={12}>
+              <Item>
+                <Controller
+                  name="direccion"
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      id="direccion"
+                      label="Dirección"
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      {...register("direccion", {
+                        required: messages.required,
+                      })}
+                    />
+                  )}
+                />
+                {errors.direccion && <p>{errors.direccion.message}</p>}
+              </Item>
+            </Grid>
 
-          <Grid item xs={7}>
-            <Item>
-              <Controller
-                control={control}
-                name="ua"
-                defaultValue={null}
-                rules={{
-                  validate: (value) =>
-                    value !== null ||
-                    messages.required,
-                }}
-                render={({ field: { onChange, value } }) => (
-                  <Autocomplete
-                    options={unidades}
-                    getOptionLabel={(option) => getOpObj(option, unidades).name}
-                    isOptionEqualToValue={(option, value) =>
-                      value === undefined || option.id === value.id
-                    }
-                    onChange={(event, values) => onChange(values)}
-                    value={value}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Unidad Administrativa"
-                        variant="outlined"
-                        size="small"
-                        fullWidth
-                      />
-                    )}
-                  />
-                )}
-              />
-              {errors.ua && <p>{errors.ua.message}</p>}
-            </Item>
-          </Grid>
+            <Grid item xs={7}>
+              <Item>
+                <Controller
+                  control={control}
+                  name="grado"
+                  defaultValue={null}
+                  rules={{
+                    validate: (value) => value !== null || messages.required,
+                  }}
+                  render={({ field: { onChange, value } }) => (
+                    <Autocomplete
+                      options={grados}
+                      getOptionLabel={(option) => getOpObj(option, grados).name}
+                      isOptionEqualToValue={(option, value) =>
+                        value === undefined || option.id === value.id
+                      }
+                      onChange={(event, values) => onChange(values)}
+                      value={value}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Grado"
+                          variant="outlined"
+                          size="small"
+                          fullWidth
+                        />
+                      )}
+                    />
+                  )}
+                />
+                {errors.grado && <p>{errors.grado.message}</p>}
+              </Item>
+            </Grid>
 
-          <Grid item xs={12}>
-            <Item>
-              <Divider />
-              <DialogActions>
-                <Link to="/afiliados" style={{ textDecoration: "none" }}>
-                  <Button onClick={handleClose}>Cancelar</Button>
-                </Link>
-                <Button type="submit">
-                  {props.mode === "EDIT" ? "Modificar" : "Agregar"}
-                </Button>
-              </DialogActions>
-            </Item>
+            <Grid item xs={5}>
+              <Item>
+                <Controller
+                  control={control}
+                  name="localidad"
+                  defaultValue={null}
+                  rules={{
+                    validate: (value) => value !== null || messages.required,
+                  }}
+                  render={({ field: { onChange, value } }) => (
+                    <Autocomplete
+                      options={localidades}
+                      getOptionLabel={(option) =>
+                        getOpObj(option, localidades).name
+                      }
+                      isOptionEqualToValue={(option, value) =>
+                        value === undefined || option.id === value.id
+                      }
+                      onChange={(event, values) => onChange(values)}
+                      value={value}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Localidad"
+                          variant="outlined"
+                          size="small"
+                          fullWidth
+                        />
+                      )}
+                    />
+                  )}
+                />
+                {errors.localidad && <p>{errors.localidad.message}</p>}
+              </Item>
+            </Grid>
+
+            <Grid item xs={7}>
+              <Item>
+                <Controller
+                  control={control}
+                  name="ua"
+                  defaultValue={null}
+                  rules={{
+                    validate: (value) => value !== null || messages.required,
+                  }}
+                  render={({ field: { onChange, value } }) => (
+                    <Autocomplete
+                      options={unidades}
+                      getOptionLabel={(option) =>
+                        getOpObj(option, unidades).name
+                      }
+                      isOptionEqualToValue={(option, value) =>
+                        value === undefined || option.id === value.id
+                      }
+                      onChange={(event, values) => onChange(values)}
+                      value={value}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Unidad Administrativa"
+                          variant="outlined"
+                          size="small"
+                          fullWidth
+                        />
+                      )}
+                    />
+                  )}
+                />
+                {errors.ua && <p>{errors.ua.message}</p>}
+              </Item>
+            </Grid>
+
+            <Grid item xs={12}>
+              <Item>
+                <Divider />
+                <DialogActions>
+                  <Link to="/afiliados" style={{ textDecoration: "none" }}>
+                    <Button onClick={handleClose}>Cancelar</Button>
+                  </Link>
+                  <Button type="submit">
+                    {props.mode === "EDIT" ? "Modificar" : "Agregar"}
+                  </Button>
+                </DialogActions>
+              </Item>
+            </Grid>
           </Grid>
-        </Grid>
-      </form>
+        </form>
+      </LocalizationProvider>
     </Box>
   );
 }
