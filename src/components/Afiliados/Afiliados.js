@@ -7,7 +7,6 @@ import Box from '@mui/material/Box';
 import TabPanel from "../../helpers/TabPanel";
 import useAxios from "../../hooks/useAxios";
 import DashboardAfiliados from "../Afiliados/DashboardAfiliados";
-import {parseISO} from 'date-fns';
 
 TabPanel.propTypes = {
   children: PropTypes.node,

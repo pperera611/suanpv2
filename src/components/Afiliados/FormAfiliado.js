@@ -110,6 +110,10 @@ export default function FormAfiliado(props) {
   
   const onSubmit = async (userInfo) => {
 
+    //reacomodo el formato fecha para que sea compatible con el formato de la base de datos
+    const fecha = new Date(userInfo.fechaNacimiento);
+    const fechaISO = fecha.toISOString(); // "2023-04-01T03:00:00.000Z"
+      
     let lista_aux = [];
     //console.log(userInfo);
     if (props.mode==="NEW"){
@@ -119,7 +123,7 @@ export default function FormAfiliado(props) {
       });
       
       let id_nuevo = Number(found.id)+1
-      let data = {id: id_nuevo,activo:true,...userInfo}
+      let data = {...userInfo, id: id_nuevo, activo:true, fechaNacimiento: fechaISO}
       try {
         const postDataResponse = await postData({ data }); // obtengo la key del afiliado agregado porque lo preciso por si lo quiero editar
         //console.log("Respuesta de postData:", postDataResponse.name);
@@ -140,8 +144,6 @@ export default function FormAfiliado(props) {
 
     if (props.mode==="EDIT"){   
 
-      const fecha = new Date(userInfo.fechaNacimiento);
-      const fechaISO = fecha.toISOString(); // "2023-04-01T03:00:00.000Z"
       const data = {...userInfo,id:Number(props.id), activo: true, fechaNacimiento:fechaISO,key: keyAfiliadoEdit} 
       try {
         await new Promise((resolve, reject) => {
