@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import TabPanel from "../../helpers/TabPanel";
 import useAxios from "../../hooks/useAxios";
 import DashboardAfiliados from "../Afiliados/DashboardAfiliados";
+import {parseISO} from 'date-fns';
 
 TabPanel.propTypes = {
   children: PropTypes.node,
@@ -26,27 +27,58 @@ export default function Afiliados(props) {
   const [value, setValue] = React.useState(0);
   const [afiliadosActivos, setAfiliadosActivos] = useState([]);
   const [afiliadosInactivos, setAfiliadosInactivos] = useState([]);
-  const [reloadData, setReloadData] = useState(false);
+  const [listaReloadData, setlistaReloadData] = useState([]);
 
-  const triggerReload = () => {
-    setReloadData(true);
-    //console.log("triggerReload");
+  const { response, error, loading } = useAxios("GET", "afiliados",{},);
+  
+  const triggerReload = (lista) => {
+     //console.log("triggerReload");
+      setlistaReloadData(lista);
   };
+  
+  useEffect(() => {
+    const dataWithKeys = response
+      ? Object.entries(response).map(([key, value]) => {
+          return { ...value, key };
+        })
+      : [];
+    //console.log(dataWithKeys);
+    setlistaReloadData(dataWithKeys);
+  }, [response]);
 
-  const { response, error, loading } = useAxios("GET", "afiliados",{},reloadData);
-  //console.log(response);
 
   useEffect(() => {
 
+    let lista = listaReloadData;
+    //console.log(lista);
     let lista_aux1 = [], lista_aux2 = [];
-    for(let i in response){
-        if (response[i].activo) lista_aux1.push(response[i])
-        else lista_aux2.push(response[i])
+    for(let i in lista){
+      
+      const {activo, apellido, direccion, nombre, email, fechaNacimiento,grado, id, localidad, nroSocio, telefono, ua, key} = lista[i];
+
+      const afiliado = {
+        activo: activo,
+        apellido: apellido,
+        direccion: direccion,
+        nombre: nombre,
+        email: email,
+        fechaNacimiento: parseISO(fechaNacimiento),
+        grado: grado,
+        id: id,
+        localidad: localidad,
+        nroSocio: nroSocio,
+        telefono: telefono,
+        ua: ua,
+        key: key
+      };
+
+      if (lista[i].activo) lista_aux1.push(afiliado)
+      else lista_aux2.push(afiliado)
     }
     setAfiliadosActivos(lista_aux1);
     setAfiliadosInactivos(lista_aux2);
 
-  }, [response,reloadData]);
+  }, [listaReloadData]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -62,7 +94,6 @@ export default function Afiliados(props) {
   }
   
   return (
-    
     <Box>
       <Box sx={{  width: '100%' , borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">

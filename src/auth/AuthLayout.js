@@ -18,8 +18,7 @@ const AuthLayout = ({ children }) => {
     return <div>Cargando...</div>;
   }
   
-
-  return <>{user && children}</>;
+return <>{user && children}</>;
 };
 
 export default AuthLayout;

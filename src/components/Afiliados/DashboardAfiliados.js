@@ -13,12 +13,10 @@ import useDataApp from "../../hooks/useDataApp";
 
 const columns = [
   { header: "Apellido", dataKey: "apellido" },
-  //{header:"Digito Verificador", dataKey:"digitoVerificador"},
   { header: "Direccion", dataKey: "direccion" },
   { header: "Email", dataKey: "email" },
   { header: "Fecha Nac.", dataKey: "fechaNacimiento" },
   { header: "Grado", dataKey: "grado" },
-  //{header:"Identificador", dataKey:"id"},
   { header: "Localidad", dataKey: "localidad" },
   { header: "Nombre", dataKey: "nombre" },
   { header: "Nro Socio", dataKey: "nroSocio" },
@@ -30,16 +28,16 @@ const columns = [
 const DashboardAfiliados = (props) =>{
 
   const [listFiltrada, setListFiltrada] = useState([]);
+  //const [afiliados_with_keys, setAfiliados_with_keys] = useState([]);
 
-  const { grados, localidades, unidades, afiliados, loading } = useDataApp();
+  const { grados, localidades, unidades, loading } = useDataApp();
 
+  
   useEffect(()=>{
     setListFiltrada(props.lista);
   },[props.lista])
 
   
-
- 
   const handlerfilterList = useCallback((filtros) => {
 
     const filtroSocio = filtros.nroSocio.toUpperCase();
@@ -49,14 +47,14 @@ const DashboardAfiliados = (props) =>{
     const filtroUA = filtros.ua.toUpperCase();
     const filtroLocalidad = filtros.localidad.toUpperCase();
 
-    const lista_filtrada = props.lista.filter(
+    const lista_filtrada = Object.values(props.lista).filter(
       (afiliado) =>
         afiliado["nroSocio"].toString().includes(filtroSocio) &&
         afiliado["nombre"].includes(filtroNombre) &&
-        afiliado["apellido"].includes(filtroApellido) &&
-        afiliado["grado"].includes(filtroGrado) &&
-        afiliado["ua"].includes(filtroUA) &&
-        afiliado["localidad"].includes(filtroLocalidad)
+        afiliado["apellido"].includes(filtroApellido)  &&
+        afiliado["grado"].name.includes(filtroGrado) &&
+        afiliado["ua"].name.includes(filtroUA) &&
+        afiliado["localidad"].name.includes(filtroLocalidad)
     );
 
     setListFiltrada(lista_filtrada);
@@ -92,7 +90,7 @@ const DashboardAfiliados = (props) =>{
               grados={grados}
               localidades={localidades}
               unidades={unidades}
-              afiliados={afiliados}
+              afiliados={props.lista}
             />
           }
         />
@@ -105,7 +103,7 @@ const DashboardAfiliados = (props) =>{
               grados={grados}
               localidades={localidades}
               unidades={unidades}
-              afiliados={afiliados}
+              afiliados={props.lista}
               
             />
           }
