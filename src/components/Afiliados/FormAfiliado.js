@@ -36,8 +36,8 @@ const messages = {
 };
 
 export default function FormAfiliado(props) {
-  //props.mode // si es EDIT significa que vine navegando desde el boton de modificar, si es NEW del boton agregar
-  //props.id // tiene el id del funcionario a modificar
+  //props.mode : si es EDIT significa que vine navegando desde el boton de modificar, si es NEW del boton agregar
+  //props.id : tiene el id del funcionario a modificar
 
   const [afiliadosAux, setAfiliadosAux] = useState();
   const [keyAfiliadoEdit, setKeyAfiliadoEdit] = useState();
@@ -56,9 +56,8 @@ export default function FormAfiliado(props) {
 
   const { postData, putData} = useAxios("", "afiliados",{});
     
-  //console.log(afiliados); 
   useEffect(() => {
-    console.log(afiliados);
+
     if (props.mode === "EDIT" && afiliados) {
       // si quiero modificar....
       //obtengo datos del afiliado
@@ -75,7 +74,6 @@ export default function FormAfiliado(props) {
       setAfiliadosAux(lista_aux);
       //como el form se renderizo para modificar, tengo que cargar en los campos los valores del afiliado
       setValue("nroSocio", afiliado.nroSocio);
-      //setFocus('nroSocio',{ shouldSelect: true })
       setValue("nombre", afiliado.nombre);
       setValue("apellido", afiliado.apellido);
       setValue("telefono",afiliado.telefono);
@@ -84,10 +82,7 @@ export default function FormAfiliado(props) {
       setValue("grado",afiliado.grado);
       setValue("localidad",afiliado.localidad);
       setValue("ua",afiliado.ua);
-
-      console.log("la fecha cruda viene: ", afiliado.fechaNacimiento);
-
-      setValue("fechaNacimiento",afiliado.fechaNacimiento);
+      setValue("fechaNacimiento",parseISO(afiliado.fechaNacimiento));
     }
   }, [afiliados, props.mode, props.id, setValue]);
 
@@ -114,10 +109,6 @@ export default function FormAfiliado(props) {
   };
   
   const onSubmit = async (userInfo) => {
-
-    
-    
-    //const fecha =  userInfo.fechaNacimiento;
 
     let lista_aux = [];
     //console.log(userInfo);
@@ -148,8 +139,10 @@ export default function FormAfiliado(props) {
     }
 
     if (props.mode==="EDIT"){   
-      
-      const data = {id:Number(props.id), activo: true, fechaNacimiento: String(userInfo.fechaNacimiento), key: keyAfiliadoEdit,...userInfo} 
+
+      const fecha = new Date(userInfo.fechaNacimiento);
+      const fechaISO = fecha.toISOString(); // "2023-04-01T03:00:00.000Z"
+      const data = {...userInfo,id:Number(props.id), activo: true, fechaNacimiento:fechaISO,key: keyAfiliadoEdit} 
       try {
         await new Promise((resolve, reject) => {
           putData(keyAfiliadoEdit, { data })
@@ -163,7 +156,7 @@ export default function FormAfiliado(props) {
       }
       /*MEJORA*/ 
       lista_aux = afiliadosAux // 1- tomo la lista que tiene a todos los afiliados menos al que se editó
-      lista_aux.push("el data: ",data); // 2- agrego el afiliado corregido a la lista
+      lista_aux.push(data); // 2- agrego el afiliado corregido a la lista
       setAfiliadosAux(lista_aux);
       
       props.onReloadData(afiliadosAux); //3 - paso la lista al componente padre para que la renderice y no tenga que consumir de la api
@@ -179,7 +172,7 @@ export default function FormAfiliado(props) {
 
   return (
     <Box sx={{ p: 2 }}>
-      <LocalizationProvider dateAdapter={AdapterDateFns} >
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
             <Grid item xs={4}>
@@ -187,6 +180,7 @@ export default function FormAfiliado(props) {
                 <Controller
                   name="nroSocio"
                   control={control}
+                  defaultValue=""
                   render={({ field }) => (
                     <TextField
                       id="nroSocio"
@@ -361,19 +355,21 @@ export default function FormAfiliado(props) {
                       label="Fecha de nacimiento"
                       format="dd/MM/yyyy"
                       mask="__/__/____"
-                      renderInput={(params) => (
+                      onChange={(date) => field.onChange(date)}
+                      textField={(props) => (
                         <TextField
-                          {...params}
+                          {...props}
                           fullWidth
                           variant="outlined"
                           size="small"
                         />
                       )}
-                      onChange={(date) => field.onChange(date)}
                     />
                   )}
                 />
-                {errors.fechaNacimiento && <p>{errors.fechaNacimiento.message}</p>}
+                {errors.fechaNacimiento && (
+                  <p>{errors.fechaNacimiento.message}</p>
+                )}
               </Item>
             </Grid>
 

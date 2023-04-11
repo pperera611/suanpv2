@@ -52,6 +52,7 @@ export default function Afiliados(props) {
     let lista = listaReloadData;
     //console.log(lista);
     let lista_aux1 = [], lista_aux2 = [];
+    
     for(let i in lista){
       
       const {activo, apellido, direccion, nombre, email, fechaNacimiento,grado, id, localidad, nroSocio, telefono, ua, key} = lista[i];
@@ -62,7 +63,7 @@ export default function Afiliados(props) {
         direccion: direccion,
         nombre: nombre,
         email: email,
-        fechaNacimiento: parseISO(fechaNacimiento),
+        fechaNacimiento: (fechaNacimiento),
         grado: grado,
         id: id,
         localidad: localidad,
@@ -83,7 +84,6 @@ export default function Afiliados(props) {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
 
   let mensaje;
   if (error) {

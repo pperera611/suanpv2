@@ -27,5 +27,5 @@ export default function ModificarAfiliado(props) {
      </Modal>
    );
   
-  
+   
 }

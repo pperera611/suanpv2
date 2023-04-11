@@ -28,15 +28,11 @@ const columns = [
 const DashboardAfiliados = (props) =>{
 
   const [listFiltrada, setListFiltrada] = useState([]);
-  //const [afiliados_with_keys, setAfiliados_with_keys] = useState([]);
-
   const { grados, localidades, unidades, loading } = useDataApp();
-
   
   useEffect(()=>{
     setListFiltrada(props.lista);
   },[props.lista])
-
   
   const handlerfilterList = useCallback((filtros) => {
 
