@@ -8,11 +8,12 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import Copyright from "../helpers/Copyright";
+import Copyright from "../UI/Copyright";
 import { auth } from "../auth/firebase.js";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate} from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
+import Spinner from "../UI/Spinner";
 
 
 
@@ -104,7 +105,7 @@ export default function SignInSide() {
 };
 
   if (loading) {
-    return <div>Cargando...</div>;
+    return <Spinner/>;
   }
 
   return (

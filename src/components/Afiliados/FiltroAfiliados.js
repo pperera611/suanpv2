@@ -8,7 +8,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import {useEffect, useState} from "react";
 import SelectLocalidad from "../../helpers/SelectLocalidad";
-import Item from "../../helpers/Item";
+import Item from "../../UI/Item";
 
 
 const FiltroAfiliados = (props) => {

@@ -1,8 +1,9 @@
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import Box from "@mui/material/Box";
+import Tooltip from "@mui/material/Tooltip";
 
-const ButtonNew = () => {
+const ButtonNew = (props) => {
   return (
     <Box
       sx={{
@@ -18,9 +19,11 @@ const ButtonNew = () => {
         },
       }}
     >
-      <Fab color="secondary" aria-label="add">
-        <AddIcon />
-      </Fab>
+      <Tooltip title= {props.title}>
+        <Fab color="secondary" aria-label="add">
+          <AddIcon />
+        </Fab>
+      </Tooltip>
     </Box>
   );
 

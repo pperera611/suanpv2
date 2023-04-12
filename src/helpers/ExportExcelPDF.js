@@ -4,6 +4,7 @@ import {Stack } from '@mui/material';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
+import Tooltip from '@mui/material/Tooltip';
 
 
 const ExportExcelPDF = (props)  => {
@@ -42,7 +43,6 @@ const ExportExcelPDF = (props)  => {
 
   return (
     <Stack direction="row" spacing={1}>
-      
       <Box
         onClick={handlerExportExcel}
         sx={{
@@ -58,12 +58,14 @@ const ExportExcelPDF = (props)  => {
           },
         }}
       >
-        <Fab color="secondary" aria-label="excel">
-          <img
-            src="https://img.icons8.com/material/24/FFFFFF/export-excel.png"
-            alt="Exportar a excel"
-          />
-        </Fab>
+        <Tooltip title="Exportar a excel">
+          <Fab color="secondary" aria-label="excel">
+            <img
+              src="https://img.icons8.com/material/24/FFFFFF/export-excel.png"
+              alt="Exportar a excel"
+            />
+          </Fab>
+        </Tooltip>
       </Box>
       <Box
         onClick={handlerExportPDF}
@@ -80,12 +82,14 @@ const ExportExcelPDF = (props)  => {
           },
         }}
       >
-        <Fab color="secondary" aria-label="pdf">
-          <img
-            src="https://img.icons8.com/material/24/FFFFFF/export-pdf.png"
-            alt="Exportar a PDF"
-          />
-        </Fab>
+        <Tooltip title="Exportar a PDF">
+          <Fab color="secondary" aria-label="pdf">
+            <img
+              src="https://img.icons8.com/material/24/FFFFFF/export-pdf.png"
+              alt="Exportar a PDF"
+            />
+          </Fab>
+        </Tooltip>
       </Box>
     </Stack>
   );

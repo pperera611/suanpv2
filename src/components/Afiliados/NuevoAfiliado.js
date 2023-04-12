@@ -1,4 +1,4 @@
-import Modal from "../../helpers/Modal";
+import Modal from "../../UI/Modal";
 import FormAfiliado from "./FormAfiliado";
 import Divider from '@mui/material/Divider';
 import React, { useState } from 'react';

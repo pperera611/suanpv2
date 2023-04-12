@@ -2,14 +2,14 @@ import { useForm, Controller } from "react-hook-form";
 import { useState, useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
-import Item from "../../helpers/Item";
+import Item from "../../UI/Item";
 import Box from "@mui/material/Box";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import Autocomplete from "@mui/material/Autocomplete";
 import useAxios from "../../hooks/useAxios";
-import { verificarNroCobro } from "../../auxiliaries/funcAux";
+import { verificarNroCobro } from "../../helpers/funcAux.js"
 import { Link, useNavigate } from "react-router-dom";
 import { DatePicker, } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers';

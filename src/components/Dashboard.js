@@ -8,7 +8,7 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import Copyright from "../helpers/Copyright";
+import Copyright from "../UI/Copyright";
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import MainListItems from '../helpers/MainListItems';
@@ -17,7 +17,7 @@ import Button from '@mui/material/Button';
 import Afiliados from "../components/Afiliados/Afiliados.js"
 import { Routes, Route, Link } from 'react-router-dom';
 import UnidadesAdministrativas from './UA/UnidadesAdministrativas';
-import {AppBar, Drawer } from "../helpers/NavAndAppBar";
+import {AppBar, Drawer } from "../UI/NavAndAppBar";
 
 
 

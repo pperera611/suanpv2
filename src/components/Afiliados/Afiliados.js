@@ -4,9 +4,11 @@ import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import TabPanel from "../../helpers/TabPanel";
+import TabPanel from "../../UI/TabPanel";
 import useAxios from "../../hooks/useAxios";
 import DashboardAfiliados from "../Afiliados/DashboardAfiliados";
+import Spinner from "../../UI/Spinner";
+
 
 TabPanel.propTypes = {
   children: PropTypes.node,
@@ -90,7 +92,7 @@ export default function Afiliados(props) {
     mensaje = <div> Error </div>;
   }
   if (loading) {
-    mensaje = <div> Loading...</div>;
+    <Spinner/>
   }
   
   return (

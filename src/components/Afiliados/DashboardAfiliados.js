@@ -5,11 +5,12 @@ import NuevoAfiliado from "./NuevoAfiliado";
 import Divider from "@mui/material/Divider";
 import {useEffect, useState, useCallback} from "react";
 import {Route, Routes, Link } from "react-router-dom";
-import ButtonNew from "../../helpers/ButtonNew";
+import ButtonNew from "../../UI/ButtonNew";
 import React from "react";
 import { Stack } from "@mui/material";
 import ModificarAfiliado from "./ModificarAfiliado";
 import useDataApp from "../../hooks/useDataApp";
+import Spinner from "../../UI/Spinner";
 
 const columns = [
   { header: "Apellido", dataKey: "apellido" },
@@ -57,15 +58,17 @@ const DashboardAfiliados = (props) =>{
   },[props.lista]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Spinner/>;
   }
  
   return (
     <>
       <Stack direction="row" spacing={1}>
-        <Link to="new">
-          <ButtonNew />
-        </Link>
+        {props.activo && (
+          <Link to="new">
+            <ButtonNew title="Agregar nuevo afiliado"/>
+          </Link>
+        )}
         <ExportExcelPDF
           lista={listFiltrada}
           columns={columns}
@@ -100,7 +103,6 @@ const DashboardAfiliados = (props) =>{
               localidades={localidades}
               unidades={unidades}
               afiliados={props.lista}
-              
             />
           }
         />
