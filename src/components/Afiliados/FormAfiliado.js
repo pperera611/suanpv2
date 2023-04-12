@@ -15,6 +15,8 @@ import { DatePicker, } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {parseISO} from 'date-fns';
+import {toast } from 'sonner'
+
 
 const patterns = {
   nombre: /^[A-Za-z]+$/i,
@@ -32,8 +34,7 @@ const messages = {
   email: "Debes introducir un correo valido",
   telefono: "Debes introducir un número de telefono",
   direccion: "Debe introducir una direccion de domicilio",
-  //grado: "Debe seleccionar un grado para el afiliado"
-};
+  };
 
 export default function FormAfiliado(props) {
   //props.mode : si es EDIT significa que vine navegando desde el boton de modificar, si es NEW del boton agregar
@@ -117,7 +118,7 @@ export default function FormAfiliado(props) {
     let lista_aux = [];
     //console.log(userInfo);
     if (props.mode==="NEW"){
-      //obtengo el id maximo hasta ahora ya que se que es correlativo
+      //obtengo el id maximo hasta ahora ya que se que es correlativo --esto no es necesario cuando se integre con backend
       let  found = afiliados.reduce((anterior, actual) => {
         return (anterior.id > actual.id) ? anterior : actual;
       });
@@ -128,17 +129,18 @@ export default function FormAfiliado(props) {
         const postDataResponse = await postData({ data }); // obtengo la key del afiliado agregado porque lo preciso por si lo quiero editar
         //console.log("Respuesta de postData:", postDataResponse.name);
         data = {key: postDataResponse.name, ...data}
+        toast.success('Afiliado ha sido agregado con exito')
       } catch (error) {
         // Manejar el error si la promesa fue rechazada
         console.error(error);
+        toast.error('Error - no se pudo agregar el afiliado')
         return;
       }
       /*MEJORA*/
       lista_aux = afiliados // 1- tomo la lista que tiene a todos los afiliados
       lista_aux.push(data); // 2- agrego el nuevo afiliado a la lista
-      
+      lista_aux.sort((afiliado1, afiliado2) => afiliado1.nroSocio - afiliado2.nroSocio) // la ordeno por nro de cobro
       props.onReloadData(lista_aux); //3 - paso la lista al componente padre para que la renderice y no tenga que consumir de la api
-
       
     }
 
@@ -151,33 +153,40 @@ export default function FormAfiliado(props) {
             .then(() => resolve())
             .catch(reject);
         });
+        toast.success('Afiliado ha sido modificado con exito')
       } catch (error) {
         // Manejar el error si la promesa fue rechazada
         console.error(error);
+        toast.error('Error - no se pudo modificar el afiliado')
         return;
       }
       /*MEJORA*/ 
       lista_aux = afiliadosAux // 1- tomo la lista que tiene a todos los afiliados menos al que se editó
       lista_aux.push(data); // 2- agrego el afiliado corregido a la lista
+      lista_aux.sort((afiliado1, afiliado2) => afiliado1.nroSocio - afiliado2.nroSocio) // la ordeno por nro de cobro
       setAfiliadosAux(lista_aux);
       
       props.onReloadData(afiliadosAux); //3 - paso la lista al componente padre para que la renderice y no tenga que consumir de la api
-      
-      
+       
     }
    
     navigate("/afiliados"); //me redirijo al componente Afiliado
-
     
   };
 
-
   return (
-    <Box sx={{ p: 2 }}>
+    <Box
+        sx={{
+        display: "flex",
+        flexDirection: "column",
+        m: "auto",
+        width: "fit-content",
+      }}
+    >
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={2}>
-            <Grid item xs={4}>
+            <Grid item xs={2}>
               <Item>
                 <Controller
                   name="nroSocio"
@@ -223,8 +232,8 @@ export default function FormAfiliado(props) {
               </Item>
             </Grid>
 
-            <Grid item xs={6}></Grid>
-            <Grid item xs={6}>
+            
+            <Grid item xs={5}>
               <Item>
                 <Controller
                   name="nombre"
@@ -252,7 +261,7 @@ export default function FormAfiliado(props) {
                 {errors.nombre && <p>{errors.nombre.message}</p>}
               </Item>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={5}>
               <Item>
                 <Controller
                   name="apellido"
@@ -279,7 +288,7 @@ export default function FormAfiliado(props) {
                 {errors.apellido && <p>{errors.apellido.message}</p>}
               </Item>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={3}>
               <Item>
                 <Controller
                   name="telefono"
@@ -342,7 +351,7 @@ export default function FormAfiliado(props) {
               </Item>
             </Grid>
 
-            <Grid item xs={6}>
+            <Grid item xs={3}>
               <Item>
                 <Controller
                   name="fechaNacimiento"

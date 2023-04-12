@@ -1,6 +1,5 @@
 import Modal from "../../helpers/Modal";
 import FormAfiliado from "./FormAfiliado";
-import Divider from '@mui/material/Divider';
 import React, { useState } from 'react';
 import { useParams } from "react-router-dom";
 
@@ -13,7 +12,7 @@ export default function ModificarAfiliado(props) {
   };
    return (
      <Modal isOpen={isModalOpen} tituloModal="Modificar Afiliado">
-       <Divider />
+       
        <FormAfiliado
          onReloadData={props.onReloadData}
          onClose={closeModal}

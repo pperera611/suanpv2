@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import Divider from '@mui/material/Divider';
+
 
 const Modal = ({ children, isOpen, onClose, tituloModal }) => {
   if (!isOpen) {
@@ -10,8 +12,9 @@ const Modal = ({ children, isOpen, onClose, tituloModal }) => {
   }
 
   return ReactDOM.createPortal(
-    <Dialog open={isOpen} onClose={onClose}>
+    <Dialog fullWidth={true} maxWidth='md' open={isOpen} onClose={onClose}>
         <DialogTitle>{tituloModal}</DialogTitle>
+        <Divider />
         <DialogContent>{children}</DialogContent>
       </Dialog>,
     document.getElementById('modal-root')

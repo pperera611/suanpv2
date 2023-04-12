@@ -79,7 +79,7 @@ const { onChangeFilter } = props;
     <Box>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />} id="filtro">
-          <Typography>Filtros:</Typography>
+          <Typography variant="h6">Filtros:</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <Grid container spacing={3}>
@@ -88,7 +88,7 @@ const { onChangeFilter } = props;
                 <TextField
                   value={filtros.nroSocio}
                   id="nro-socio"
-                  label="Nro de Socio"
+                  label="Nro de Cobro"
                   variant="outlined"
                   size="small"
                   fullWidth

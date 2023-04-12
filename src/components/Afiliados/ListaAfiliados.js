@@ -18,7 +18,7 @@ import {Link } from "react-router-dom";
 const columns = [
   { id: 'nombre', label: 'Nombre', minWidth: 100 },
   { id: 'apellido', label: 'Apellido', minWidth: 100 },
-  { id: 'nroSocio', label: 'Nro de Socio', minWidth: 60},
+  { id: 'nroSocio', label: 'Nro de Cobro', minWidth: 60},
   { id: 'grado', label: 'Grado', minWidth: 170},
   { id: 'ua', label: 'Unidad Administrativa', minWidth: 170},
   { id: 'localidad', label: 'Localidad', minWidth: 100, align: 'right'},
@@ -58,7 +58,7 @@ export default function ListaAfiliados(props) {
                   <TableCell
                     key={column.id}
                     align={column.align}
-                    style={{ minWidth: column.minWidth }}
+                    style={{ minWidth: column.minWidth, fontWeight: 'bold' }}
                   >
                     {column.label}
                   </TableCell>
@@ -66,7 +66,7 @@ export default function ListaAfiliados(props) {
                 <TableCell
                   key="opciones"
                   align="center"
-                  style={{ minWidth: 60 }}
+                  style={{ minWidth: 60, fontWeight: 'bold' }}
                 >
                   Opciones
                 </TableCell>

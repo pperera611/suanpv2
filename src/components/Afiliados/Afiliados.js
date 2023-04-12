@@ -48,7 +48,8 @@ export default function Afiliados(props) {
 
   useEffect(() => {
 
-    let lista = listaReloadData;
+    let lista = listaReloadData.sort((afiliado1, afiliado2) => afiliado1.nroSocio - afiliado2.nroSocio)
+    
     //console.log(lista);
     let lista_aux1 = [], lista_aux2 = [];
     
@@ -62,7 +63,7 @@ export default function Afiliados(props) {
         direccion: direccion,
         nombre: nombre,
         email: email,
-        fechaNacimiento: (fechaNacimiento),
+        fechaNacimiento: fechaNacimiento,
         grado: grado,
         id: id,
         localidad: localidad,

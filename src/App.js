@@ -5,11 +5,12 @@ import SignInSide from './components/SignInSide';
 import Logout from './components/Logout';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AuthLayout from "./auth/AuthLayout.js";
+import { Toaster } from 'sonner'
 
 function App() {
   return (
     <div className="App">
-      
+         <Toaster richColors position="bottom-right"/>
         <BrowserRouter>
           <Routes>
             <Route
