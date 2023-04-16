@@ -6,13 +6,15 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Divider from '@mui/material/Divider';
 
 
-const Modal = ({ children, isOpen, onClose, tituloModal }) => {
+const Modal = ({ children, isOpen, onClose, size, tituloModal }) => {
   if (!isOpen) {
     return null;
   }
 
+  if (size === undefined) size='md'
+
   return ReactDOM.createPortal(
-    <Dialog fullWidth={true} maxWidth='md' open={isOpen} onClose={onClose}>
+    <Dialog fullWidth={true} maxWidth={size} open={isOpen} onClose={onClose}>
         <DialogTitle>{tituloModal}</DialogTitle>
         <Divider />
         <DialogContent>{children}</DialogContent>

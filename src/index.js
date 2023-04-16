@@ -5,11 +5,20 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {createTheme, ThemeProvider } from '@mui/material/styles';
 
-const mdTheme = createTheme();
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#e53935",
+    },
+    secondary: {
+      main: "#ef5350",
+    },
+  },
+});
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <ThemeProvider theme={mdTheme}>
+  <ThemeProvider theme={theme}>
     <React.StrictMode>
       <App />
     </React.StrictMode>

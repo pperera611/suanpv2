@@ -15,9 +15,6 @@ import { useNavigate} from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Spinner from "../UI/Spinner";
 
-
-
-
 export default function SignInSide() {
 
   const [email, setEmail] = useState("");
@@ -140,7 +137,7 @@ export default function SignInSide() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Sign in
+              Ingrese usuario y contraseña
             </Typography>
             <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <TextField
@@ -176,7 +173,7 @@ export default function SignInSide() {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Sign In
+                Ingresar
               </Button>
               {error && <p>{error}</p>}
               {validationErrors.map((error, index) => (

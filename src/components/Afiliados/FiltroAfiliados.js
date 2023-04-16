@@ -14,8 +14,7 @@ import Item from "../../UI/Item";
 const FiltroAfiliados = (props) => {
   
   const [filtros, setFiltros] = useState({nroSocio: "" , nombre:"" , apellido:"", grado:"", ua: "", localidad: ""});
-
-
+  
   const handlerChangeNroSocio = (event) => {
     const nroSocio = event.target.value;
     setFiltros((prevState) => {
@@ -67,8 +66,7 @@ const FiltroAfiliados = (props) => {
  
 const { onChangeFilter } = props;
 
-
- useEffect(()=>{
+useEffect(()=>{
   const filtro_copia = {...filtros}
   onChangeFilter(filtro_copia);
   
@@ -124,7 +122,7 @@ const { onChangeFilter } = props;
             </Grid>
             <Grid item xs={3}>
               <Item>
-                <SelectLocalidad onSelected={handlerChangeLocalidad}/>
+                <SelectLocalidad localidades = {props.localidades} onSelected={handlerChangeLocalidad}/>
               </Item>
             </Grid>
             <Grid item xs={6}>

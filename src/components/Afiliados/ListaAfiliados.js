@@ -92,9 +92,11 @@ export default function ListaAfiliados(props) {
                       <TableCell>
                         <Stack direction="row" spacing={0}>
                           <Tooltip title="Dar de baja afiliado">
+                          <Link to={`/afiliados/${String(row.id)}/unsuscribe`} style={{ textDecoration: 'none' }}>
                             <IconButton aria-label="delete">
                               <DeleteIcon />
                             </IconButton>
+                            </Link>
                           </Tooltip>
                           <Tooltip title="Editar datos afiliado">
                           <Link to={`/afiliados/${String(row.id)}/edit`} style={{ textDecoration: 'none' }}>

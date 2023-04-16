@@ -9,8 +9,10 @@ import ButtonNew from "../../UI/ButtonNew";
 import React from "react";
 import { Stack } from "@mui/material";
 import ModificarAfiliado from "./ModificarAfiliado";
+import StatusAfiliado from "./StatusAfiliado";
 import useDataApp from "../../hooks/useDataApp";
 import Spinner from "../../UI/Spinner";
+
 
 const columns = [
   { header: "Apellido", dataKey: "apellido" },
@@ -29,8 +31,18 @@ const columns = [
 const DashboardAfiliados = (props) =>{
 
   const [listFiltrada, setListFiltrada] = useState([]);
+  const [localidadesName, setLocalidadesName] = useState([]);
   const { grados, localidades, unidades, loading } = useDataApp();
   
+
+  useEffect(() => {
+    let lista_aux = [];
+    for (let i = 0; i < localidades.length; i++) {
+      lista_aux.push(localidades[i].name.toUpperCase());
+    }
+    setLocalidadesName(lista_aux);
+  },[localidades]);
+
   useEffect(()=>{
     setListFiltrada(props.lista);
   },[props.lista])
@@ -76,7 +88,7 @@ const DashboardAfiliados = (props) =>{
         />
       </Stack>
       <Divider sx={{ my: 1 }} />
-      <FiltroAfiliados onChangeFilter={handlerfilterList} />
+      <FiltroAfiliados localidades={localidadesName} onChangeFilter={handlerfilterList} />
       <Divider sx={{ my: 1 }} />
       <ListaAfiliados lista={listFiltrada} />
       <Routes>
@@ -102,6 +114,20 @@ const DashboardAfiliados = (props) =>{
               grados={grados}
               localidades={localidades}
               unidades={unidades}
+              afiliados={props.lista}
+            />
+          }
+        />
+        <Route
+          path=":id/unsuscribe"
+          element={
+            <StatusAfiliado
+              modalOpen={true}
+              mode = "unsuscribe"
+              //onReloadData={props.onReloadData}
+              //grados={grados}
+              //localidades={localidades}
+              //unidades={unidades}
               afiliados={props.lista}
             />
           }

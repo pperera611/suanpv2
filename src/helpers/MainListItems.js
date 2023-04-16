@@ -14,39 +14,66 @@ const MainListItems = (props) => {
 
   return (
     <React.Fragment>
-      <Link to="/afiliados" style={{ textDecoration: 'none' }}>
+      <Link to="/afiliados" style={{ textDecorationLine: "none" }}>
         <ListItemButton>
           <ListItemIcon>
             <PeopleIcon />
           </ListItemIcon>
-          <ListItemText primary="Afiliados" />
+          <ListItemText
+            primary="Afiliados"
+            primaryTypographyProps={{
+              style: { color: "#CC4545" },
+              fontWeight: "bold",
+            }}
+          />
         </ListItemButton>
       </Link>
-      <Link to="/ua" style={{ textDecoration: 'none' }}>
+      <Link to="/ua" style={{ textDecorationLine: "none" }}>
         <ListItemButton>
           <ListItemIcon>
             <AddHomeWorkIcon />
           </ListItemIcon>
-          <ListItemText primary="U. Administrativas" />
+          <ListItemText
+            primary="U. Administrativas"
+            primaryTypographyProps={{
+              style: { color: "#CC4545" },
+              fontWeight: "bold",
+            }}
+          />
         </ListItemButton>
       </Link>
       <ListItemButton>
         <ListItemIcon>
           <PeopleIcon />
         </ListItemIcon>
-        <ListItemText primary="Grados" />
+        <ListItemText
+          primary="Grados"
+          primaryTypographyProps={{
+            style: { color: "#CC4545", fontWeight: "bold" },
+          }}
+        />
       </ListItemButton>
       <ListItemButton>
         <ListItemIcon>
           <BarChartIcon />
         </ListItemIcon>
-        <ListItemText primary="Localidades" />
+        <ListItemText
+          primary="Localidades"
+          primaryTypographyProps={{
+            style: { color: "#CC4545", fontWeight: "bold" },
+          }}
+        />
       </ListItemButton>
       <ListItemButton>
         <ListItemIcon>
           <LayersIcon />
         </ListItemIcon>
-        <ListItemText primary="Parametros" />
+        <ListItemText
+          primary="Parametros"
+          primaryTypographyProps={{
+            style: { color: "#CC4545", fontWeight: "bold" },
+          }}
+        />
       </ListItemButton>
     </React.Fragment>
   );
