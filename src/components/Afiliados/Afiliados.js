@@ -105,10 +105,10 @@ export default function Afiliados(props) {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-      {loading || error ? mensaje : <DashboardAfiliados lista={afiliadosActivos} activo ={true} onReloadData={triggerReload}/>}
+      {loading || error ? mensaje : <DashboardAfiliados lista={afiliadosActivos} lista2 = {afiliadosInactivos} activo ={true} onReloadData={triggerReload}/>}
       </TabPanel>
       <TabPanel value={value} index={1}>
-      {loading || error ? mensaje : <DashboardAfiliados lista={afiliadosInactivos} activo ={false} onReloadData={triggerReload}/>}
+      {loading || error ? mensaje : <DashboardAfiliados lista={afiliadosInactivos} lista2 = {afiliadosActivos} activo ={false} onReloadData={triggerReload}/>}
       </TabPanel>
       <TabPanel value={value} index={2}>
         Item Three

@@ -146,7 +146,7 @@ export default function FormAfiliado(props) {
 
     if (props.mode==="EDIT"){   
 
-      const data = {...userInfo,id:Number(props.id), activo: true, fechaNacimiento:fechaISO,key: keyAfiliadoEdit} 
+      const data = {...userInfo,id:Number(props.id), /*activo: true, */fechaNacimiento:fechaISO,key: keyAfiliadoEdit} 
       try {
         await new Promise((resolve, reject) => {
           putData(keyAfiliadoEdit, { data })

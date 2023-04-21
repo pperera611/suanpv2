@@ -90,7 +90,7 @@ const DashboardAfiliados = (props) =>{
       <Divider sx={{ my: 1 }} />
       <FiltroAfiliados localidades={localidadesName} onChangeFilter={handlerfilterList} />
       <Divider sx={{ my: 1 }} />
-      <ListaAfiliados lista={listFiltrada} />
+      <ListaAfiliados lista={listFiltrada} activo={props.activo}/>
       <Routes>
         <Route
           path="new"
@@ -124,11 +124,21 @@ const DashboardAfiliados = (props) =>{
             <StatusAfiliado
               modalOpen={true}
               mode = "unsuscribe"
-              //onReloadData={props.onReloadData}
-              //grados={grados}
-              //localidades={localidades}
-              //unidades={unidades}
-              afiliados={props.lista}
+              onReloadData={props.onReloadData}
+              afiliados = {props.lista} //af activos
+              afiliados2 = {props.lista2} //af inactivos
+            />
+          }
+        />
+        <Route
+          path=":id/reactivate"
+          element={
+            <StatusAfiliado
+              modalOpen={true}
+              mode = "reactivate"
+              onReloadData={props.onReloadData}
+              afiliados = {props.lista} //af inactivos
+              afiliados2 = {props.lista2} //af activos
             />
           }
         />

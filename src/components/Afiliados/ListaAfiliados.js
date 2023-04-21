@@ -10,6 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import DeleteIcon from '@mui/icons-material/Delete';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import EditIcon from '@mui/icons-material/Edit';
 import Tooltip from '@mui/material/Tooltip';
 
@@ -85,24 +86,46 @@ export default function ListaAfiliados(props) {
                           <TableCell key={column.id} align={column.align}>
                             {column.format && typeof value === "number"
                               ? column.format(value)
-                              : (value.name === undefined? value: value.name)}
+                              : value.name === undefined
+                              ? value
+                              : value.name}
                           </TableCell>
                         );
                       })}
                       <TableCell>
                         <Stack direction="row" spacing={0}>
-                          <Tooltip title="Dar de baja afiliado">
-                          <Link to={`/afiliados/${String(row.id)}/unsuscribe`} style={{ textDecoration: 'none' }}>
-                            <IconButton aria-label="delete">
-                              <DeleteIcon />
-                            </IconButton>
-                            </Link>
-                          </Tooltip>
+                          {props.activo ? (
+                            <Tooltip title="Dar de baja afiliado">
+                              <Link
+                                to={`/afiliados/${String(row.id)}/unsuscribe`}
+                                style={{ textDecoration: "none" }}
+                              >
+                                <IconButton aria-label="delete">
+                                  <DeleteIcon />
+                                </IconButton>
+                              </Link>
+                            </Tooltip>
+                          ) : (
+                            <Tooltip title="Reactivar afiliado">
+                              <Link
+                                to={`/afiliados/${String(row.id)}/reactivate`}
+                                style={{ textDecoration: "none" }}
+                              >
+                                <IconButton aria-label="delete">
+                                  <RestartAltIcon />
+                                </IconButton>
+                              </Link>
+                            </Tooltip>
+                          )}
+
                           <Tooltip title="Editar datos afiliado">
-                          <Link to={`/afiliados/${String(row.id)}/edit`} style={{ textDecoration: 'none' }}>
-                            <IconButton aria-label="edit">
-                              <EditIcon />
-                            </IconButton>
+                            <Link
+                              to={`/afiliados/${String(row.id)}/edit`}
+                              style={{ textDecoration: "none" }}
+                            >
+                              <IconButton aria-label="edit">
+                                <EditIcon />
+                              </IconButton>
                             </Link>
                           </Tooltip>
                         </Stack>
