@@ -36,17 +36,14 @@ const StatusAfiliado = (props) => {
     );
 
   useEffect(() => {
-    //OJO CON ESTO POR SI PONGO DE VIVO EN EL NAVEGADOR /UNSUSCRIBE CON ID EQUIVOCADO O /REACTIVATE CON ID EQUIVOCADO
+    //controlo por si se quiere dar de baja un afiliado que ya esta inactivo o reactivar un afiliado que ya esta activo
     let afiliado1 = Object.values(props.afiliados).find(
       (e) => e.id === Number(id)
     );
     let afiliado2 = Object.values(props.afiliados2).find(
       (e) => e.id === Number(id)
     );
-
     let afiliado = afiliado1 || afiliado2;
-    //console.log(afiliado);
-
     if (
       (afiliado.activo && props.mode === "reactivate") ||
       (!afiliado.activo && props.mode === "unsuscribe")

@@ -12,6 +12,7 @@ import Stack from '@mui/material/Stack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import EditIcon from '@mui/icons-material/Edit';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import Tooltip from '@mui/material/Tooltip';
 
 import {Link } from "react-router-dom";
@@ -125,6 +126,16 @@ export default function ListaAfiliados(props) {
                             >
                               <IconButton aria-label="edit">
                                 <EditIcon />
+                              </IconButton>
+                            </Link>
+                          </Tooltip>
+                          <Tooltip title="Ver historial afiliado">
+                            <Link
+                              to={`/afiliados/${String(row.id)}/history`}
+                              style={{ textDecoration: "none" }}
+                            >
+                              <IconButton aria-label="view">
+                                <VisibilityIcon />
                               </IconButton>
                             </Link>
                           </Tooltip>

@@ -2,6 +2,7 @@ import FiltroAfiliados from "./FiltroAfiliados";
 import ListaAfiliados from "./ListaAfiliados";
 import ExportExcelPDF from "../../helpers/ExportExcelPDF";
 import NuevoAfiliado from "./NuevoAfiliado";
+import HistorialAfiliado from "./HistorialAfiliado";
 import Divider from "@mui/material/Divider";
 import {useEffect, useState, useCallback} from "react";
 import {Route, Routes, Link } from "react-router-dom";
@@ -137,6 +138,17 @@ const DashboardAfiliados = (props) =>{
               modalOpen={true}
               mode = "reactivate"
               onReloadData={props.onReloadData}
+              afiliados = {props.lista} //af inactivos
+              afiliados2 = {props.lista2} //af activos
+
+            />
+          }
+        />
+        <Route
+          path=":id/history"
+          element={
+            <HistorialAfiliado
+              modalOpen={true}
               afiliados = {props.lista} //af inactivos
               afiliados2 = {props.lista2} //af activos
             />
