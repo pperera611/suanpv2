@@ -15,7 +15,7 @@ const Modal = ({ children, isOpen, onClose, size, tituloModal }) => {
 
   return ReactDOM.createPortal(
     <Dialog fullWidth={true} maxWidth={size} open={isOpen} onClose={onClose}>
-        <DialogTitle>{tituloModal}</DialogTitle>
+        <DialogTitle sx={{ textAlign: 'center' }}>{tituloModal}</DialogTitle>
         <Divider />
         <DialogContent>{children}</DialogContent>
       </Dialog>,

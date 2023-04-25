@@ -9,14 +9,13 @@ import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import Autocomplete from "@mui/material/Autocomplete";
 import useAxios from "../../hooks/useAxios";
-import { verificarNroCobro } from "../../helpers/funcAux.js"
+import { verificarNroCobro } from "../../helpers/funcAux.js";
 import { Link, useNavigate } from "react-router-dom";
-import { DatePicker, } from '@mui/x-date-pickers';
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
-import {parseISO} from 'date-fns';
-import {toast } from 'sonner'
-
+import { DatePicker } from "@mui/x-date-pickers";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { parseISO } from "date-fns";
+import { toast } from "sonner";
 
 const patterns = {
   nombre: /^[A-Za-z]+$/i,
@@ -27,14 +26,14 @@ const patterns = {
 };
 
 const messages = {
-  required: "Este campo es obligatorio", 
+  required: "Este campo es obligatorio",
   nroSocio: "El número de socio introducido no es el correcto",
   nombre: "Debes introducir una cadena de texto correcta",
   apellido: "Debes introducir una cadena de texto correcta",
   email: "Debes introducir un correo valido",
   telefono: "Debes introducir un número de telefono",
   direccion: "Debe introducir una direccion de domicilio",
-  };
+};
 
 export default function FormAfiliado(props) {
   //props.mode : si es EDIT significa que vine navegando desde el boton de modificar, si es NEW del boton agregar
@@ -45,7 +44,7 @@ export default function FormAfiliado(props) {
   //para guardar los afiliados menos el que se esta editando, de esta manera
   //puedo controlar que NO controle que el nro de cobro esta repetido
 
-  const {grados, localidades, unidades, afiliados} = props;
+  const { grados, localidades, unidades, afiliados } = props;
   const navigate = useNavigate();
   const {
     register,
@@ -55,10 +54,9 @@ export default function FormAfiliado(props) {
     setValue,
   } = useForm({ mode: "onBlur" });
 
-  const { postData, putData} = useAxios("", "afiliados",{});
-    
-  useEffect(() => {
+  const { postData, putData } = useAxios("", "afiliados", {});
 
+  useEffect(() => {
     if (props.mode === "EDIT" && afiliados) {
       // si quiero modificar....
       //obtengo datos del afiliado
@@ -77,17 +75,16 @@ export default function FormAfiliado(props) {
       setValue("nroSocio", afiliado.nroSocio);
       setValue("nombre", afiliado.nombre);
       setValue("apellido", afiliado.apellido);
-      setValue("telefono",afiliado.telefono);
-      setValue("direccion",afiliado.direccion);
+      setValue("telefono", afiliado.telefono);
+      setValue("direccion", afiliado.direccion);
       setValue("email", afiliado.email);
-      setValue("grado",afiliado.grado);
-      setValue("localidad",afiliado.localidad);
-      setValue("ua",afiliado.ua);
-      setValue("fechaNacimiento",parseISO(afiliado.fechaNacimiento));
+      setValue("grado", afiliado.grado);
+      setValue("localidad", afiliado.localidad);
+      setValue("ua", afiliado.ua);
+      setValue("fechaNacimiento", parseISO(afiliado.fechaNacimiento));
     }
   }, [afiliados, props.mode, props.id, setValue]);
 
- 
   const getOpObj = (option, options) => {
     if (!option.id) option = options.find((op) => op.id === option);
     return option;
@@ -103,80 +100,89 @@ export default function FormAfiliado(props) {
       props.mode === "EDIT"
         ? Object.values(afiliadosAux)
         : Object.values(afiliados);
-   
+
     const found = afiliadosList.find((e) => e.nroSocio === Number(nroCobro));
-   
+
     return found !== undefined;
   };
-  
-  const onSubmit = async (userInfo) => {
 
+  const onSubmit = async (userInfo) => {
     //reacomodo el formato fecha para que sea compatible con el formato de la base de datos
     const fecha = new Date(userInfo.fechaNacimiento);
     const fechaISO = fecha.toISOString(); // "2023-04-01T03:00:00.000Z"
-      
+
     let lista_aux = [];
     //console.log(userInfo);
-    if (props.mode==="NEW"){
+    if (props.mode === "NEW") {
       //obtengo el id maximo hasta ahora ya que se que es correlativo --esto no es necesario cuando se integre con backend
-      let  found = afiliados.reduce((anterior, actual) => {
-        return (anterior.id > actual.id) ? anterior : actual;
+      let found = afiliados.reduce((anterior, actual) => {
+        return anterior.id > actual.id ? anterior : actual;
       });
-      
-      let id_nuevo = Number(found.id)+1
-      let data = {...userInfo, id: id_nuevo, activo:true, fechaNacimiento: fechaISO}
+
+      let id_nuevo = Number(found.id) + 1;
+      let data = {
+        ...userInfo,
+        id: id_nuevo,
+        activo: true,
+        fechaNacimiento: fechaISO,
+      };
       try {
         const postDataResponse = await postData({ data }); // obtengo la key del afiliado agregado porque lo preciso por si lo quiero editar
         //console.log("Respuesta de postData:", postDataResponse.name);
-        data = {key: postDataResponse.name, ...data}
-        toast.success('Afiliado ha sido agregado con exito')
+        data = { key: postDataResponse.name, ...data };
+        toast.success("Afiliado ha sido agregado con exito");
       } catch (error) {
         // Manejar el error si la promesa fue rechazada
         console.error(error);
-        toast.error('Error - no se pudo agregar el afiliado')
+        toast.error("Error - no se pudo agregar el afiliado");
         return;
       }
       /*MEJORA*/
-      lista_aux = afiliados // 1- tomo la lista que tiene a todos los afiliados
+      lista_aux = afiliados; // 1- tomo la lista que tiene a todos los afiliados
       lista_aux.push(data); // 2- agrego el nuevo afiliado a la lista
-      lista_aux.sort((afiliado1, afiliado2) => afiliado1.nroSocio - afiliado2.nroSocio) // la ordeno por nro de cobro
+      lista_aux.sort(
+        (afiliado1, afiliado2) => afiliado1.nroSocio - afiliado2.nroSocio
+      ); // la ordeno por nro de cobro
       props.onReloadData(lista_aux); //3 - paso la lista al componente padre para que la renderice y no tenga que consumir de la api
-      
     }
 
-    if (props.mode==="EDIT"){   
-
-      const data = {...userInfo,id:Number(props.id), /*activo: true, */fechaNacimiento:fechaISO,key: keyAfiliadoEdit} 
+    if (props.mode === "EDIT") {
+      const data = {
+        ...userInfo,
+        id: Number(props.id),
+        /*activo: true, */ fechaNacimiento: fechaISO,
+        key: keyAfiliadoEdit,
+      };
       try {
         await new Promise((resolve, reject) => {
           putData(keyAfiliadoEdit, { data })
             .then(() => resolve())
             .catch(reject);
         });
-        toast.success('Afiliado ha sido modificado con exito')
+        toast.success("Afiliado ha sido modificado con exito");
       } catch (error) {
         // Manejar el error si la promesa fue rechazada
         console.error(error);
-        toast.error('Error - no se pudo modificar el afiliado')
+        toast.error("Error - no se pudo modificar el afiliado");
         return;
       }
-      /*MEJORA*/ 
-      lista_aux = afiliadosAux // 1- tomo la lista que tiene a todos los afiliados menos al que se editó
+      /*MEJORA*/
+      lista_aux = afiliadosAux; // 1- tomo la lista que tiene a todos los afiliados menos al que se editó
       lista_aux.push(data); // 2- agrego el afiliado corregido a la lista
-      lista_aux.sort((afiliado1, afiliado2) => afiliado1.nroSocio - afiliado2.nroSocio) // la ordeno por nro de cobro
+      lista_aux.sort(
+        (afiliado1, afiliado2) => afiliado1.nroSocio - afiliado2.nroSocio
+      ); // la ordeno por nro de cobro
       setAfiliadosAux(lista_aux);
-      
+
       props.onReloadData(afiliadosAux); //3 - paso la lista al componente padre para que la renderice y no tenga que consumir de la api
-       
     }
-   
+
     navigate("/afiliados"); //me redirijo al componente Afiliado
-    
   };
 
   return (
     <Box
-        sx={{
+      sx={{
         display: "flex",
         flexDirection: "column",
         m: "auto",
@@ -232,7 +238,6 @@ export default function FormAfiliado(props) {
               </Item>
             </Grid>
 
-            
             <Grid item xs={5}>
               <Item>
                 <Controller
@@ -261,6 +266,7 @@ export default function FormAfiliado(props) {
                 {errors.nombre && <p>{errors.nombre.message}</p>}
               </Item>
             </Grid>
+            
             <Grid item xs={5}>
               <Item>
                 <Controller
@@ -288,6 +294,7 @@ export default function FormAfiliado(props) {
                 {errors.apellido && <p>{errors.apellido.message}</p>}
               </Item>
             </Grid>
+
             <Grid item xs={3}>
               <Item>
                 <Controller
@@ -323,6 +330,7 @@ export default function FormAfiliado(props) {
                 {errors.telefono && <p>{errors.telefono.message}</p>}
               </Item>
             </Grid>
+
             <Grid item xs={6}>
               <Item>
                 <Controller
