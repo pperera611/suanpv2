@@ -16,7 +16,7 @@ import SecondaryListItems  from '../helpers/SecondaryListItems';
 import Button from '@mui/material/Button'; 
 import Afiliados from "../components/Afiliados/Afiliados.js"
 import { Routes, Route, Link } from 'react-router-dom';
-import UnidadesAdministrativas from './UA/UnidadesAdministrativas';
+import Generico from './Genericos/Generico';
 import {AppBar, Drawer } from "../UI/NavAndAppBar";
 
 
@@ -107,7 +107,10 @@ function DashboardContent() {
 
             <Routes>
               <Route path="afiliados/*" element={ <Afiliados />} />
-              <Route path="ua" element={ <UnidadesAdministrativas />} />
+              <Route path="ua" element={ <Generico instance="ua" />} />
+              <Route path="grados" element={ <Generico instance="grados"/>} />
+              <Route path="localidades" element={ <Generico instance="localidades"/>} />
+
             </Routes>
              
             </Grid>

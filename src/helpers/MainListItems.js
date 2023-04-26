@@ -42,6 +42,7 @@ const MainListItems = (props) => {
           />
         </ListItemButton>
       </Link>
+      <Link to="/grados" style={{ textDecorationLine: "none" }}>
       <ListItemButton>
         <ListItemIcon>
           <PeopleIcon />
@@ -53,6 +54,8 @@ const MainListItems = (props) => {
           }}
         />
       </ListItemButton>
+      </Link>
+      <Link to="/localidades" style={{ textDecorationLine: "none" }}>
       <ListItemButton>
         <ListItemIcon>
           <BarChartIcon />
@@ -64,6 +67,7 @@ const MainListItems = (props) => {
           }}
         />
       </ListItemButton>
+      </Link>
       <ListItemButton>
         <ListItemIcon>
           <LayersIcon />

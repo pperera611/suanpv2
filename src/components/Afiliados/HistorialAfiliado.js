@@ -49,17 +49,18 @@ const HistorialAfiliado = (props) => {
   );
   const afiliado = afiliado1 || afiliado2;
   const { response, loading } = useHistoriaAxios(afiliado.key);
+  //obtengo la historia del afiliado
 
   useEffect(() => {
     setRows(response);
-    console.log(response);
+    //console.log(response);
   }, [response]);
 
   const handleSort = (property) => (event) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
-  };
+  }; //aux para ordenar tabla
 
   const descendingComparator = (a, b, orderBy) => {
     if (b[orderBy] < a[orderBy]) {
@@ -69,13 +70,13 @@ const HistorialAfiliado = (props) => {
       return 1;
     }
     return 0;
-  };
+  }; //aux para ordenar tabla
 
   const getComparator = (order, orderBy) => {
     return order === "desc"
       ? (a, b) => descendingComparator(a, b, orderBy)
       : (a, b) => -descendingComparator(a, b, orderBy);
-  };
+  }; //aux para ordenar tabla
 
   const stableSort = (array, comparator) => {
     const stabilizedThis = array.map((el, index) => [el, index]);
@@ -85,7 +86,7 @@ const HistorialAfiliado = (props) => {
       return a[1] - b[1];
     });
     return stabilizedThis.map((el) => el[0]);
-  };
+  }; //aux para ordenar tabla
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -104,23 +105,28 @@ const HistorialAfiliado = (props) => {
     <Spinner />;
   }
 
-  let cabezal_funcionario = "Historial Afiliado - "+ afiliado.nombre + " " + afiliado.apellido+" - Nro de cobro : "+afiliado.nroSocio;
+  let cabezal_funcionario =
+    "Historial Afiliado - " +
+    afiliado.nombre +
+    " " +
+    afiliado.apellido +
+    " - Nro de cobro : " +
+    afiliado.nroSocio;
   return (
     <Modal isOpen={isModalOpen} tituloModal={cabezal_funcionario} size="md">
-      
-      <Item>
-        <Grid item xs={12}>
+      <Grid item xs={12}>
+        <Item>
           <Typography gutterBottom>
-           Mail: {afiliado.email}{" - "}Telefono: {afiliado.telefono}{" - "} Localidad: {afiliado.localidad.name}
+            Mail: {afiliado.email}
+            {" - "}Telefono: {afiliado.telefono}
+            {" - "} Localidad: {afiliado.localidad.name}
           </Typography>
           <Typography gutterBottom>
             Unidad Administrativa: {afiliado.ua.name}
           </Typography>
           <Typography gutterBottom>Grado: {afiliado.grado.name}</Typography>
-        </Grid>
-      </Item>
-      
-
+        </Item>
+      </Grid>
       <Grid item xs={12}>
         <Item>
           <Paper sx={{ width: "100%", overflow: "hidden" }}>
