@@ -85,11 +85,7 @@ export default function ListaAfiliados(props) {
                         //console.log(value);
                         return (
                           <TableCell key={column.id} align={column.align}>
-                            {column.format && typeof value === "number"
-                              ? column.format(value)
-                              : value.name === undefined
-                              ? value
-                              : value.name}
+                            {column.format && typeof value === "number" ? column.format(value) : value.name === undefined ? value : value.name}
                           </TableCell>
                         );
                       })}

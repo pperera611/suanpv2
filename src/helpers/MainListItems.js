@@ -3,7 +3,6 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import PeopleIcon from '@mui/icons-material/People';
-import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AddHomeWorkIcon from '@mui/icons-material/AddHomeWork';
 import { Link } from 'react-router-dom';
@@ -28,13 +27,13 @@ const MainListItems = (props) => {
           />
         </ListItemButton>
       </Link>
-      <Link to="/ua" style={{ textDecorationLine: "none" }}>
+      <Link to="/mantenimiento/ua" style={{ textDecorationLine: "none" }}>
         <ListItemButton>
           <ListItemIcon>
             <AddHomeWorkIcon />
           </ListItemIcon>
           <ListItemText
-            primary="U. Administrativas"
+            primary="Mantenimiento"
             primaryTypographyProps={{
               style: { color: "#CC4545" },
               fontWeight: "bold",
@@ -42,32 +41,7 @@ const MainListItems = (props) => {
           />
         </ListItemButton>
       </Link>
-      <Link to="/grados" style={{ textDecorationLine: "none" }}>
-      <ListItemButton>
-        <ListItemIcon>
-          <PeopleIcon />
-        </ListItemIcon>
-        <ListItemText
-          primary="Grados"
-          primaryTypographyProps={{
-            style: { color: "#CC4545", fontWeight: "bold" },
-          }}
-        />
-      </ListItemButton>
-      </Link>
-      <Link to="/localidades" style={{ textDecorationLine: "none" }}>
-      <ListItemButton>
-        <ListItemIcon>
-          <BarChartIcon />
-        </ListItemIcon>
-        <ListItemText
-          primary="Localidades"
-          primaryTypographyProps={{
-            style: { color: "#CC4545", fontWeight: "bold" },
-          }}
-        />
-      </ListItemButton>
-      </Link>
+      
       <ListItemButton>
         <ListItemIcon>
           <LayersIcon />

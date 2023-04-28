@@ -64,13 +64,13 @@ const FiltroAfiliados = (props) => {
   };
 
  
-const { onChangeFilter } = props;
+  const { onChangeFilter } = props;
 
-useEffect(()=>{
-  const filtro_copia = {...filtros}
-  onChangeFilter(filtro_copia);
+  useEffect(()=>{
+    const filtro_copia = {...filtros}
+    onChangeFilter(filtro_copia);
   
- },[filtros,onChangeFilter])
+  },[filtros,onChangeFilter])
 
 
   return (

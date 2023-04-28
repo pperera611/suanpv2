@@ -14,12 +14,10 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import MainListItems from '../helpers/MainListItems';
 import SecondaryListItems  from '../helpers/SecondaryListItems';
 import Button from '@mui/material/Button'; 
-import Afiliados from "../components/Afiliados/Afiliados.js"
+import Afiliados from "./Afiliados/Afiliados.js"
 import { Routes, Route, Link } from 'react-router-dom';
-import Generico from './Genericos/Generico';
+import Mantenimiento  from "./Mantenimiento/Mantenimiento.js" 
 import {AppBar, Drawer } from "../UI/NavAndAppBar";
-
-
 
 
 function DashboardContent() {
@@ -107,9 +105,8 @@ function DashboardContent() {
 
             <Routes>
               <Route path="afiliados/*" element={ <Afiliados />} />
-              <Route path="ua" element={ <Generico instance="ua" />} />
-              <Route path="grados" element={ <Generico instance="grados"/>} />
-              <Route path="localidades" element={ <Generico instance="localidades"/>} />
+              <Route path="mantenimiento/*" element={ <Mantenimiento/>} />
+             
 
             </Routes>
              

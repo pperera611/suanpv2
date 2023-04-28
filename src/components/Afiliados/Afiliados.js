@@ -1,6 +1,6 @@
 import React from 'react';
 import {useState, useEffect } from "react";
-import PropTypes from 'prop-types';
+
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
@@ -9,12 +9,6 @@ import useAxios from "../../hooks/useAxios";
 import DashboardAfiliados from "../Afiliados/DashboardAfiliados";
 import Spinner from "../../UI/Spinner";
 
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
  
 function a11yProps(index) {
   return {

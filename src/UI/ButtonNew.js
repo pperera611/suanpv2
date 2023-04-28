@@ -21,7 +21,7 @@ const ButtonNew = (props) => {
     >
       <Tooltip title= {props.title}>
         <Fab color="secondary" aria-label="add">
-          <AddIcon />
+          <AddIcon/>
         </Fab>
       </Tooltip>
     </Box>
