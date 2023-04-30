@@ -38,8 +38,9 @@ const DashboardAfiliados = (props) =>{
 
   useEffect(() => {
     let lista_aux = [];
-    for (let i = 0; i < localidades.length; i++) {
-      lista_aux.push(localidades[i].name.toUpperCase());
+    const localidadesAux = Object.values(localidades);
+    for (let i = 0; i < localidadesAux.length; i++) {
+      lista_aux.push(localidadesAux[i].name.toUpperCase());
     }
     setLocalidadesName(lista_aux);
   },[localidades]);
@@ -116,6 +117,7 @@ const DashboardAfiliados = (props) =>{
               localidades={localidades}
               unidades={unidades}
               afiliados={props.lista}
+              
             />
           }
         />

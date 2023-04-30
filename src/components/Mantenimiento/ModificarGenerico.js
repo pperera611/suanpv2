@@ -1,37 +1,23 @@
 import Modal from "../../UI/Modal";
 import FormGenerico from "./FormGenerico";
-import React, { useState } from 'react';
 import { useParams } from "react-router-dom";
+import {modal_title_edit} from "../../helpers/MessagesMantenimiento";
 
-const modal_title = {
-    ua: "Modificar unidad administrativa",
-    grados: "Modificar grado",
-    localidades: "Modificar localidad",
-    gastos: "Modificar concepto de gasto",
-  };
 
 const ModificarGenerico = (props) => {
-
-    const [isModalOpen, setIsModalOpen] = useState(props.modalOpen);
-    const { id } = useParams()
-
-    const closeModal = () => {
-      setIsModalOpen(false);
-    };
-     
-    return (
-       <Modal isOpen={isModalOpen} tituloModal={modal_title[props.instance]}>
-         
-         <FormGenerico
-           onReloadData={props.onReloadData}
-           onClose={closeModal}
-           mode={"EDIT"}
-           id={id}
-           lista={props.lista}
-         />
-       </Modal>
-     );
-
+  const { id } = useParams();
+  
+  return (
+    <Modal isOpen={true} tituloModal={modal_title_edit[props.instance]}>
+      <FormGenerico
+        onReloadData={props.onReloadData}
+        mode={"EDIT"}
+        id={id}
+        lista={props.lista}
+        instance={props.instance}
+      />
+    </Modal>
+  );
 };
 
 export default ModificarGenerico;

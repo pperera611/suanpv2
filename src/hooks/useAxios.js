@@ -78,6 +78,24 @@ const useAxios = (method, apiRoute, options = {}, reloadFlag = false) => {
     }
   };
 
+  const deleteData = async (id) => {
+    try {
+      setLoading(true);
+      const url = await getUrlWithAuth(`https://suanp-f6399-default-rtdb.firebaseio.com/${apiRoute}/${id}.json`);
+      const result = await axios({
+        method: "delete",
+        url,
+        ...options,
+      });
+      setResponse(result.data);
+      setError(null);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (user) {
       fetchData();
@@ -85,7 +103,7 @@ const useAxios = (method, apiRoute, options = {}, reloadFlag = false) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [method, apiRoute, JSON.stringify(options), reloadFlag, user]);
 
-  return { response, error, loading, postData, putData };
+  return { response, error, loading, postData, putData, deleteData };
 };
 
 export default useAxios;

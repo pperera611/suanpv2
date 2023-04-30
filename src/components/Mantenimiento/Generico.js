@@ -7,33 +7,14 @@ import { Link} from "react-router-dom";
 import ButtonNew from "../../UI/ButtonNew";
 import React from "react";
 import { Stack } from "@mui/material";
+import { columnMappingExport, tooltip_button_new } from "../../helpers/MessagesMantenimiento";
 
-
-const columnMapping = {
-  ua: [
-    { header: "Nombre", dataKey: "name" },
-    { header: "Codigo", dataKey: "code" },
-  ],
-  grados: [
-    { header: "Nombre", dataKey: "name" },
-    { header: "Nivel", dataKey: "level" },
-    { header: "Salario", dataKey: "salary" },
-  ],
-  default: [{ header: "Nombre", dataKey: "name" }],
-};
-
-const button_title = {
-  ua: "Agregar nueva unidad administrativa",
-  grados: "Agregar nuevo grado",
-  localidades: "Agregar nueva localidad",
-  gastos: "Agregar nuevo concepto de gasto",
-};
 
 const Generico = (props) => {
 
   const [listFiltrada, setListFiltrada] = useState([]);
-  const button_new_title = button_title[props.instance] || "Agregar";
-  const columns = columnMapping[props.instance] || columnMapping.default;
+  const button_new_title = tooltip_button_new[props.instance] || "Agregar";
+  const columns = columnMappingExport[props.instance] || columnMappingExport.default;
  
   const handlerfilterList = useCallback(
     (filtros) => {

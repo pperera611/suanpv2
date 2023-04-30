@@ -1,37 +1,20 @@
 import Modal from "../../UI/Modal";
 import FormGenerico from "./FormGenerico";
-import Divider from '@mui/material/Divider';
-import React, { useState } from 'react';
-
-
-const modal_title = {
-    ua: "Nueva unidad administrativa",
-    grados: "Nuevo grado",
-    localidades: "Nueva localidad",
-    gastos: "Nuevo concepto de gasto",
-  };
+import Divider from "@mui/material/Divider";
+import {modal_title_new} from "../../helpers/MessagesMantenimiento";
 
 const NuevoGenerico = (props) => {
-
- const [isModalOpen, setIsModalOpen] = useState(props.modalOpen);
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
   return (
-    <Modal isOpen={isModalOpen} tituloModal={modal_title[props.instance]}>
+    <Modal isOpen={true} tituloModal={modal_title_new[props.instance]}>
       <Divider />
       <FormGenerico
         onReloadData={props.onReloadData}
-        onClose={closeModal}
         mode={"NEW"}
         lista={props.lista}
+        instance={props.instance}
       />
     </Modal>
   );
-
-
 };
 
 export default NuevoGenerico;

@@ -135,7 +135,7 @@ const HistorialAfiliado = (props) => {
               {/*maxHeight: 440*/}
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
-                  <TableRow key={Math.random()}>
+                  <TableRow >
                     {columns.map((column) => (
                       <TableCell
                         key={column.id}
@@ -164,13 +164,13 @@ const HistorialAfiliado = (props) => {
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
                       )
-                      .map((row) => {
+                      .map((row,index) => {
                         return (
                           <TableRow
                             hover
                             role="checkbox"
                             tabIndex={-1}
-                            key={row.id}
+                            key={index}
                           >
                             {columns.map((column) => {
                               const value = row[column.id];

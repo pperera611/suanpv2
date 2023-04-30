@@ -26,9 +26,16 @@ export default function Afiliados(props) {
 
   const { response, error, loading } = useAxios("GET", "afiliados",{},);
   
-  const triggerReload = (lista) => {
+  const triggerReload = (lista, isActive, mode) => {
      //console.log("triggerReload");
+     const updatedList = isActive && (mode === "NEW" || mode === "EDIT") //hay que unir los activos e inactivos
+     ? [...lista, ...afiliadosInactivos]
+     : [...lista, ...afiliadosActivos];
+     setlistaReloadData(updatedList);
+
+     if (mode===undefined||null) //viene de dar de baja o reactivar (ahi se unen las listas)
       setlistaReloadData(lista);
+
   };
   
   useEffect(() => {

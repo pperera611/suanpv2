@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
@@ -22,21 +22,60 @@ export default function Mantenimiento(props) {
   const navigate = useNavigate();
   const location = useLocation();
   const tabIndex = {
-    "/mantenimiento/ua": 0,
+    "/mantenimiento/unidades": 0,
     "/mantenimiento/grados": 1,
     "/mantenimiento/localidades": 2,
     "/mantenimiento/gastos": 3,
   };
   const [value, setValue] = useState(tabIndex[location.pathname] || 0);
-
+  const [gradosReloadData, setGradosReloadData] = useState([]);
+  const [unidadesReloadData, setUnidadesReloadData] = useState([]);
+  const [localidadesReloadData, setLocalidadesReloadData] = useState([]);
+  const [gastosReloadData, setGastosReloadData] = useState([]);
+  
   const { grados, localidades, unidades, loading } = useDataApp();
+
+  useEffect(() => {
+    //cuando carga el componente al principio
+    const gradosWithKeys = transformDataWithKeys(grados);
+    const localidadesWithKeys = transformDataWithKeys(localidades);
+    const unidadesWithKeys = transformDataWithKeys(unidades);
+
+    setGradosReloadData(gradosWithKeys);
+    setLocalidadesReloadData(localidadesWithKeys);
+    setUnidadesReloadData(unidadesWithKeys);
+  }, [grados, localidades, unidades]);
+
+  const triggerReload = (lista, instance) => {
+  
+    const updatedList = [...lista];
+    if (instance === "unidades") {
+      setUnidadesReloadData(updatedList);
+    } else if (instance === "grados") {
+      setGradosReloadData(updatedList);
+    } else if (instance === "localidades") {
+      setLocalidadesReloadData(updatedList);
+    } else if (instance === "gastos") {
+      setGastosReloadData(updatedList);
+    }
+   
+  };
+
+  const transformDataWithKeys = (data) => {
+    return data
+      ? Object.entries(data).map(([key, value]) => {
+          return { ...value, key };
+        })
+      : [];
+  };
+
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
 
     switch (newValue) {
       case 0:
-        navigate("/mantenimiento/ua");
+        navigate("/mantenimiento/unidades");
         break;
       case 1:
         navigate("/mantenimiento/grados");
@@ -52,7 +91,6 @@ export default function Mantenimiento(props) {
     }
   };
 
-  let gastos = [];
   if (loading) {
     <Spinner />;
   }
@@ -73,48 +111,47 @@ export default function Mantenimiento(props) {
       </Box>
 
       <TabPanel value={value} index={0}>
-        {value === 0 && <Generico instance="ua" lista={unidades} />}
+        {value === 0 && <Generico instance="unidades" lista={unidadesReloadData} />}
       </TabPanel>
       <TabPanel value={value} index={1}>
-        {value === 1 && <Generico instance="grados" lista={grados} />}
+        {value === 1 && <Generico instance="grados" lista={gradosReloadData} />}
       </TabPanel>
       <TabPanel value={value} index={2}>
-        {value === 2 && <Generico instance="localidades" lista={localidades} />}
+        {value === 2 && (
+          <Generico instance="localidades" lista={localidadesReloadData} />
+        )}
       </TabPanel>
       <TabPanel value={value} index={3}>
-        {value === 3 && <Generico instance="gastos" lista={gastos}/>}
+        {value === 3 && <Generico instance="gastos" lista={gastosReloadData} />}
       </TabPanel>
       <Routes>
         <Route
-          path="ua/new"
+          path="unidades/new"
           element={
             <NuevoGenerico
-              modalOpen={true}
-              onReloadData={props.onReloadData}
-              instance="ua"
-              lista={unidades}
+              onReloadData={triggerReload}
+              instance="unidades"
+              lista={unidadesReloadData}
             />
           }
         />
         <Route
-          path="ua/:id/edit"
+          path="unidades/:id/edit"
           element={
             <ModificarGenerico
-              modalOpen={true}
-              onReloadData={props.onReloadData}
-              instance="ua"
-              lista={unidades}
+              onReloadData={triggerReload}
+              instance="unidades"
+              lista={unidadesReloadData}
             />
           }
         />
         <Route
-          path="ua/:id/delete"
+          path="unidades/:id/delete"
           element={
             <BorrarGenerico
-              modalOpen={true}
-              onReloadData={props.onReloadData}
-              instance="ua"
-              lista={unidades}
+              onReloadData={triggerReload}
+              instance="unidades"
+              lista={unidadesReloadData}
             />
           }
         />
@@ -122,10 +159,9 @@ export default function Mantenimiento(props) {
           path="grados/new"
           element={
             <NuevoGenerico
-              modalOpen={true}
-              onReloadData={props.onReloadData}
+              onReloadData={triggerReload}
               instance="grados"
-              lista={grados}
+              lista={gradosReloadData}
             />
           }
         />
@@ -133,10 +169,9 @@ export default function Mantenimiento(props) {
           path="grados/:id/edit"
           element={
             <ModificarGenerico
-              modalOpen={true}
-              onReloadData={props.onReloadData}
+              onReloadData={triggerReload}
               instance="grados"
-              lista={grados}
+              lista={gradosReloadData}
             />
           }
         />
@@ -144,10 +179,9 @@ export default function Mantenimiento(props) {
           path="grados/:id/delete"
           element={
             <BorrarGenerico
-              modalOpen={true}
-              onReloadData={props.onReloadData}
+              onReloadData={triggerReload}
               instance="grados"
-              lista={grados}
+              lista={gradosReloadData}
             />
           }
         />
@@ -155,10 +189,9 @@ export default function Mantenimiento(props) {
           path="localidades/new"
           element={
             <NuevoGenerico
-              modalOpen={true}
-              onReloadData={props.onReloadData}
+              onReloadData={triggerReload}
               instance="localidades"
-              lista={localidades}
+              lista={localidadesReloadData}
             />
           }
         />
@@ -166,10 +199,9 @@ export default function Mantenimiento(props) {
           path="localidades/:id/edit"
           element={
             <ModificarGenerico
-              modalOpen={true}
-              onReloadData={props.onReloadData}
+              onReloadData={triggerReload}
               instance="localidades"
-              lista={localidades}
+              lista={localidadesReloadData}
             />
           }
         />
@@ -177,10 +209,9 @@ export default function Mantenimiento(props) {
           path="localidades/:id/delete"
           element={
             <BorrarGenerico
-              modalOpen={true}
-              onReloadData={props.onReloadData}
+              onReloadData={triggerReload}
               instance="localidades"
-              lista={localidades}
+              lista={localidadesReloadData}
             />
           }
         />
@@ -188,9 +219,9 @@ export default function Mantenimiento(props) {
           path="gastos/new"
           element={
             <NuevoGenerico
-              modalOpen={true}
-              onReloadData={props.onReloadData}
+              onReloadData={triggerReload}
               instance="gastos"
+              lista={gastosReloadData}
             />
           }
         />
@@ -198,10 +229,9 @@ export default function Mantenimiento(props) {
           path="gastos/:id/edit"
           element={
             <ModificarGenerico
-              modalOpen={true}
-              onReloadData={props.onReloadData}
+              onReloadData={triggerReload}
               instance="gastos"
-              lista={gastos}
+              lista={gastosReloadData}
             />
           }
         />
@@ -209,10 +239,9 @@ export default function Mantenimiento(props) {
           path="gastos/:id/delete"
           element={
             <BorrarGenerico
-              modalOpen={true}
-              onReloadData={props.onReloadData}
+              onReloadData={triggerReload}
               instance="gastos"
-              lista={gastos}
+              lista={gastosReloadData}
             />
           }
         />

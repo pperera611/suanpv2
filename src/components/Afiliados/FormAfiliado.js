@@ -40,11 +40,13 @@ export default function FormAfiliado(props) {
   //props.id : tiene el id del funcionario a modificar
 
   const [afiliadosAux, setAfiliadosAux] = useState();
-  const [keyAfiliadoEdit, setKeyAfiliadoEdit] = useState();
+  const [afiliadoEdit, setAfiliadoEdit] = useState();
+  const [disableButton, setDisableButton] = useState(false);
   //para guardar los afiliados menos el que se esta editando, de esta manera
   //puedo controlar que NO controle que el nro de cobro esta repetido
 
   const { grados, localidades, unidades, afiliados } = props;
+
   const navigate = useNavigate();
   const {
     register,
@@ -63,7 +65,7 @@ export default function FormAfiliado(props) {
       let afiliado = Object.values(afiliados).find(
         (e) => e.id === Number(props.id)
       );
-      setKeyAfiliadoEdit(afiliado.key);
+      setAfiliadoEdit(afiliado);
       //console.log("La key del afiliado a modificar es: ", afiliado.key);
       //tengo que sacar el afiliado de la lista para que no me haga la validacion de que ya existe el nro de cobro
       let lista_aux = Object.values(afiliados).filter(
@@ -90,10 +92,6 @@ export default function FormAfiliado(props) {
     return option;
   };
 
-  const handleClose = () => {
-    props.onClose();
-  };
-
   //verifica si el nro de cobro es unico en el sistema
   const nroCobroIsUnique = (nroCobro) => {
     const afiliadosList =
@@ -107,6 +105,7 @@ export default function FormAfiliado(props) {
   };
 
   const onSubmit = async (userInfo) => {
+    setDisableButton(true);
     //reacomodo el formato fecha para que sea compatible con el formato de la base de datos
     const fecha = new Date(userInfo.fechaNacimiento);
     const fechaISO = fecha.toISOString(); // "2023-04-01T03:00:00.000Z"
@@ -120,16 +119,26 @@ export default function FormAfiliado(props) {
       });
 
       let id_nuevo = Number(found.id) + 1;
-      let data = {
+      const data = {
         ...userInfo,
         id: id_nuevo,
         activo: true,
         fechaNacimiento: fechaISO,
       };
+      
       try {
         const postDataResponse = await postData({ data }); // obtengo la key del afiliado agregado porque lo preciso por si lo quiero editar
         //console.log("Respuesta de postData:", postDataResponse.name);
-        data = { key: postDataResponse.name, ...data };
+        const data_with_key = { key: postDataResponse.name, ...data };
+        /*MEJORA*/
+        lista_aux = afiliados; // 1- tomo la lista que tiene a todos los afiliados
+        lista_aux.push(data_with_key); // 2- agrego el nuevo afiliado a la lista
+        lista_aux.sort(
+          (afiliado1, afiliado2) => afiliado1.nroSocio - afiliado2.nroSocio
+        ); // la ordeno por nro de cobro
+        
+        props.onReloadData(lista_aux,true,props.mode); //3 - paso la lista al componente padre para que la renderice y no tenga que consumir de la api
+
         toast.success("Afiliado ha sido agregado con exito");
       } catch (error) {
         // Manejar el error si la promesa fue rechazada
@@ -137,28 +146,32 @@ export default function FormAfiliado(props) {
         toast.error("Error - no se pudo agregar el afiliado");
         return;
       }
-      /*MEJORA*/
-      lista_aux = afiliados; // 1- tomo la lista que tiene a todos los afiliados
-      lista_aux.push(data); // 2- agrego el nuevo afiliado a la lista
-      lista_aux.sort(
-        (afiliado1, afiliado2) => afiliado1.nroSocio - afiliado2.nroSocio
-      ); // la ordeno por nro de cobro
-      props.onReloadData(lista_aux); //3 - paso la lista al componente padre para que la renderice y no tenga que consumir de la api
     }
 
     if (props.mode === "EDIT") {
-      const data = {
+      let data = {
         ...userInfo,
         id: Number(props.id),
-        /*activo: true, */ fechaNacimiento: fechaISO,
-        key: keyAfiliadoEdit,
+        fechaNacimiento: fechaISO,
+        key: afiliadoEdit.key,
+        activo: afiliadoEdit.activo,
+        
       };
       try {
         await new Promise((resolve, reject) => {
-          putData(keyAfiliadoEdit, { data })
+          putData(afiliadoEdit.key, { data })
             .then(() => resolve())
             .catch(reject);
         });
+        /*MEJORA*/
+        lista_aux = afiliadosAux; // 1- tomo la lista que tiene a todos los afiliados menos al que se editó
+        lista_aux.push(data); // 2- agrego el afiliado corregido a la lista
+        lista_aux.sort(
+          (afiliado1, afiliado2) => afiliado1.nroSocio - afiliado2.nroSocio
+        ); // la ordeno por nro de cobro
+        //setAfiliadosAux(lista_aux);
+        props.onReloadData(lista_aux,afiliadoEdit.activo,props.mode); //3 - paso la lista al componente padre para que la renderice y no tenga que consumir de la api
+
         toast.success("Afiliado ha sido modificado con exito");
       } catch (error) {
         // Manejar el error si la promesa fue rechazada
@@ -166,15 +179,6 @@ export default function FormAfiliado(props) {
         toast.error("Error - no se pudo modificar el afiliado");
         return;
       }
-      /*MEJORA*/
-      lista_aux = afiliadosAux; // 1- tomo la lista que tiene a todos los afiliados menos al que se editó
-      lista_aux.push(data); // 2- agrego el afiliado corregido a la lista
-      lista_aux.sort(
-        (afiliado1, afiliado2) => afiliado1.nroSocio - afiliado2.nroSocio
-      ); // la ordeno por nro de cobro
-      setAfiliadosAux(lista_aux);
-
-      props.onReloadData(afiliadosAux); //3 - paso la lista al componente padre para que la renderice y no tenga que consumir de la api
     }
 
     navigate("/afiliados"); //me redirijo al componente Afiliado
@@ -266,7 +270,7 @@ export default function FormAfiliado(props) {
                 {errors.nombre && <p>{errors.nombre.message}</p>}
               </Item>
             </Grid>
-            
+
             <Grid item xs={5}>
               <Item>
                 <Controller
@@ -427,7 +431,7 @@ export default function FormAfiliado(props) {
                   }}
                   render={({ field: { onChange, value } }) => (
                     <Autocomplete
-                      options={grados}
+                      options={Object.values(grados)}
                       getOptionLabel={(option) => getOpObj(option, grados).name}
                       isOptionEqualToValue={(option, value) =>
                         value === undefined || option.id === value.id
@@ -461,7 +465,7 @@ export default function FormAfiliado(props) {
                   }}
                   render={({ field: { onChange, value } }) => (
                     <Autocomplete
-                      options={localidades}
+                      options={Object.values(localidades)}
                       getOptionLabel={(option) =>
                         getOpObj(option, localidades).name
                       }
@@ -497,7 +501,7 @@ export default function FormAfiliado(props) {
                   }}
                   render={({ field: { onChange, value } }) => (
                     <Autocomplete
-                      options={unidades}
+                      options={Object.values(unidades)}
                       getOptionLabel={(option) =>
                         getOpObj(option, unidades).name
                       }
@@ -527,9 +531,9 @@ export default function FormAfiliado(props) {
                 <Divider />
                 <DialogActions>
                   <Link to="/afiliados" style={{ textDecoration: "none" }}>
-                    <Button onClick={handleClose}>Cancelar</Button>
+                    <Button>Cancelar</Button>
                   </Link>
-                  <Button type="submit">
+                  <Button type="submit" disabled={disableButton}>
                     {props.mode === "EDIT" ? "Modificar" : "Agregar"}
                   </Button>
                 </DialogActions>

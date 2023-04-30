@@ -13,19 +13,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Tooltip from "@mui/material/Tooltip";
 import { Link } from "react-router-dom";
+import {columnMapping} from "../../helpers/MessagesMantenimiento";
 
-const columnMapping = {
-  ua: [
-    { id: "name", label: "Nombre", minWidth: 100 },
-    { id: "code", label: "Codigo", minWidth: 60 },
-  ],
-  grados: [
-    { id: "name", label: "Nombre", minWidth: 100 },
-    { id: "level", label: "Nivel", minWidth: 60 },
-    { id: "salary", label: "Salario", minWidth: 60 },
-  ],
-  default: [{ id: "name", label: "Nombre", minWidth: 100 }],
-};
 
 export default function ListaGenericos(props) {
   
@@ -52,7 +41,7 @@ export default function ListaGenericos(props) {
           {/*maxHeight: 440*/}
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
-              <TableRow key={Math.random()}>
+              <TableRow >
                 {columns.map((column) => (
                   <TableCell
                     key={column.id}
@@ -78,8 +67,8 @@ export default function ListaGenericos(props) {
                   return (
                     <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                       {columns.map((column) => {
-                        const value = row[column.id];
-                        //console.log(value);
+                        let value = row[column.id];
+                        if (column.id==="salary") value="$"+String(value);
                         return (
                           <TableCell key={column.id} align={column.align}>
                             {column.format && typeof value === "number"
@@ -95,7 +84,7 @@ export default function ListaGenericos(props) {
                          
                             <Tooltip title="Eliminar">
                               <Link
-                                to={`/${props.instance}/${String(row.id)}/delete`}
+                                to={`${props.instance}/${String(row.id)}/delete`}
                                 style={{ textDecoration: "none" }}
                               >
                                 <IconButton aria-label="delete">
