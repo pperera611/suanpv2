@@ -22,6 +22,11 @@ const dataRequests = {
         url: "afiliados",
         headers: { accept: "*/*" },
     },
+    gastos: {
+      method: "GET",
+      url: "gastos",
+      headers: { accept: "*/*" },
+  },
 };
 
 const useDataApp = () => {
@@ -30,6 +35,7 @@ const useDataApp = () => {
     localidades: [],
     unidades: [],
     afiliados: [],
+    gastos: []
   });
   
   const dataGrados = useAxios(
@@ -52,6 +58,11 @@ const useDataApp = () => {
     dataRequests.afiliados.url,
     { headers: dataRequests.afiliados.headers }
   );
+  const dataGastos = useAxios(
+    dataRequests.gastos.method,
+    dataRequests.gastos.url,
+    { headers: dataRequests.gastos.headers }
+  );
 
   
   useEffect(() => {
@@ -71,6 +82,9 @@ const useDataApp = () => {
     if (!dataAfiliados.error && dataAfiliados.response) {
       updateData("afiliados", dataAfiliados.response);
     }
+    if (!dataGastos.error && dataGastos.response) {
+      updateData("gastos", dataGastos.response);
+    }
   }, [
     dataGrados.response,
     dataGrados.error,
@@ -80,6 +94,8 @@ const useDataApp = () => {
     dataUnidades.error,
     dataAfiliados.response,
     dataAfiliados.error,
+    dataGastos.response,
+    dataGastos.error
   ]);
 
   return {
@@ -87,11 +103,13 @@ const useDataApp = () => {
     localidades: data.localidades,
     unidades: data.unidades,
     afiliados: data.afiliados,
+    gastos: data.gastos,
     loading:
     dataGrados.loading ||
     dataLocalidades.loading ||
     dataUnidades.loading ||
-    dataAfiliados.loading,
+    dataAfiliados.loading ||
+    dataGastos.loading
     
   };
 }

@@ -21,8 +21,9 @@ import TableSortLabel from "@mui/material/TableSortLabel";
 import Typography from "@mui/material/Typography";
 
 const columns = [
-  { id: "fecha", label: "Fecha", minWidth: 100 },
-  { id: "registro", label: "Evento", minWidth: 100 },
+  { id: "fecha", label: "Fecha", minWidth: 70 },
+  { id: "evento", label: "Evento", minWidth: 100 },
+  { id: "descripcion", label: "Descripcion", minWidth: 150 },
 ];
 
 const useHistoriaAxios = (afiliadoKey) => {
@@ -52,8 +53,12 @@ const HistorialAfiliado = (props) => {
   //obtengo la historia del afiliado
 
   useEffect(() => {
-    setRows(response);
-    //console.log(response);
+    if (response){
+      const lista = Object.values(response);
+      console.log(lista);
+      setRows(lista);
+      
+    }
   }, [response]);
 
   const handleSort = (property) => (event) => {

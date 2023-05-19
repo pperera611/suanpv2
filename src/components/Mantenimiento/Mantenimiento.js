@@ -33,18 +33,21 @@ export default function Mantenimiento(props) {
   const [localidadesReloadData, setLocalidadesReloadData] = useState([]);
   const [gastosReloadData, setGastosReloadData] = useState([]);
   
-  const { grados, localidades, unidades, loading } = useDataApp();
+  const { grados, localidades, unidades, gastos, loading } = useDataApp();
 
   useEffect(() => {
     //cuando carga el componente al principio
     const gradosWithKeys = transformDataWithKeys(grados);
     const localidadesWithKeys = transformDataWithKeys(localidades);
     const unidadesWithKeys = transformDataWithKeys(unidades);
+    const gastosWithKeys = transformDataWithKeys(gastos);
 
     setGradosReloadData(gradosWithKeys);
     setLocalidadesReloadData(localidadesWithKeys);
     setUnidadesReloadData(unidadesWithKeys);
-  }, [grados, localidades, unidades]);
+    setGastosReloadData(gastosWithKeys)
+
+  }, [grados, localidades, unidades, gastos]);
 
   const triggerReload = (lista, instance) => {
   
